@@ -31,7 +31,7 @@ post<-src_connectR("PostgreSQL35W")
 ```
 
 ## Checking the database
-Let's look at the database and see what tables belong to me. Lucky for us connectR has a useful function `dbtbls` that will search the database with tables have been specifically created by me.
+Let's look at the database and see what tables belong to me. Lucky for us connectR has a useful function `dbusr` that will search the database with tables have been specifically created by me.
 ```{r, fig.show='hold'}
 knitr::kable(head(dbtbls(post)))
 ```

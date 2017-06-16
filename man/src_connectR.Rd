@@ -14,7 +14,7 @@ src_connectR(dsn = NULL, uid = NULL, pwd = NULL, Update = F,
 
 \item{pwd:}{User password for database}
 
-\item{db:}{Database name i.e. TMG}
+\item{db:}{Database name i.e. default}
 
 \item{Update:}{Update encrypted password}
 
@@ -29,19 +29,19 @@ Function that connects to databases, and also ecrypt password for safe storage.
 \examples{
  #Standard connection to teradata and to database "CIS",
  unadviced as password in contained within the code:
-   src_connectR(dsn = "ZEUS64", uid = "USERNAME", pwd = "PaSsword",
+   src_connectR(dsn = "POSTGRES", uid = "USERNAME", pwd = "PaSsword",
     db = "CIS", Update = F)
 
  #Standard connection to teradata and to all database,
  unadviced as password in contained within the code:
-   src_connectR(dsn = "ZEUS64", uid = "USERNAME", pwd = "PaSsword",
+   src_connectR(dsn = "POSTGRES", uid = "USERNAME", pwd = "PaSsword",
     Update = F)
 
  #Connection to teradata and to all databases,
  R will take store encrypted username and password:
-   connectR(dsn = "ZEUS64")
+   connectR(dsn = "POSTGRES")
 
  #Connection to teradata and to all databases,
  as Update = TRUE, stored password will be updated:
-   connectR(dsn = "ZEUS64",Update=T)
+   connectR(dsn = "POSTGRES",Update=T)
 }
