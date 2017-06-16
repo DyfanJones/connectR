@@ -5,19 +5,19 @@
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param uid: User id for database
 #'@param sbstr: A 3 character string, that searches table names i.e. "DL_". Can set sbstr to be a vector for multiple search i.e. c("DL_","DJ_")
-#'@param db: Database name i.e. TMG
+#'@param db: Database name i.e. default
 #'@param schema: Database schema i.e public
 #'
 #'@export
 #'@examples
 #'  #Search for default user (account signed into the computer)
-#'   tables in the database TMG.
-#'    dbtbls(zeus)->dbtables
+#'   tables in the database default.
+#'    dbtbls(post)->dbtables
 #'
 #'  #Search for default user (account signed into the computer)
-#'   tables in the database TMG, also searches for c("DJ_","DRJ") and
+#'   tables in the database default, also searches for c("DJ_","DRJ") and
 #'    at start of table name variable.
-#'    dbtbls(zeus,sbstr=c("DJ_","DRJ"))->dbtables
+#'    dbtbls(post,sbstr=c("DJ_","DRJ"))->dbtables
 #'
 #'  #Search for default user, (account signed into the computer)
 #'   tables in the database postgres, shopdirect and also searches in the schema public
