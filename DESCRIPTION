@@ -1,0 +1,14 @@
+Package: connectR
+Type: Package
+Title: Database backend for DBI, dplyr and dbplyr
+Version: 0.1.3
+Author: Dyfan Jones
+Maintainer: The package maintainer <dyfan.jones@shopdirect.com>
+Description: Allows you to use dplyr code with databases using the DBI package.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

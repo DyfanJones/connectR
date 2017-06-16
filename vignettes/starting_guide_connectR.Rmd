@@ -1,0 +1,146 @@
+---
+title: "Starting Guide for connectR"
+author: "Dyfan Jones"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+##connectR Intro
+
+The connectR package extends dplyr so that is can connect to multiple databases .i.e. Teradata. This lets you treat database tables like standard R dataframes and to process R’s dataframes as if they were database tables. It also can ulities the power of DBI and send sql queries to a database and force the database to create tables before R touches the data. This gives R a greater flexiblity when working with databases.
+
+If you've not used dplyr before, it's recommended you read the official dplyr tutorials first:
+
+* [Introduction to dplyr](https://blog.rstudio.org/2017/06/13/dplyr-0-7-0/amp/)
+* [Programming with dplyr](http://dplyr.tidyverse.org/articles/programming.html)
+
+## Installation And Usage
+It is recommended you import the `tidyverse`, `dbplyr`, `DBI` packages into your R session before `connectR` as `connectR` relies on some of these package base functions.
+
+## Connect to Teradata
+Once you've imported connectR into your session you can connect to Teradata (/other databases) using the `connectoR` function. 
+```{r, fig.show='hold', results="hide"}
+library(tidyverse)
+library(connectR)
+
+post<-src_connectR(dsn="post64")
+```
+
+## Checking the database
+Let's look at the database and see what tables belong to me. Lucky for us connectR has a useful function `dbtbls` that will search the database with tables have been specifically created by me.
+```{r, fig.show='hold'}
+knitr::kable(head(dbtbls(post)))
+```
+
+Behind the scence `dbtbls` is your user id, in this case 'LMAR763' and searching in the 'TMG' database on Teradata. `dbtbls` has a range of features that allow you change what database you want to search, what uid you want to search for or even down to 3 chacter name at the start of tables in the database i.e. 'DRJ'.
+
+## Send sql queries to database
+
+connectR can also send queries to the database allowing large sql queries to be broken down. The `db_send_query` function allows R to be "lazy" and just make the database do all the work.
+
+Lets create a table.
+
+```{r, fig.show='hold'}
+db_send_query(post$con,"create table kaggle_test as
+                        (Select
+                        a.name,
+                        a.style,
+                        a.abv,
+                        b.brewery_name,
+                        b.city
+                        from kaggle_beers a
+                        inner join kaggle_breweries b
+                        on a.brewery_id = b.brewery_id) with no data;")
+```
+
+Lets now populate the new table we have just created.
+
+```{r, fig.show='hold'}
+db_send_query(post$con,"insert into kaggle_test
+                        Select
+                        a.name,
+                        a.style,
+                        a.abv,
+                        b.brewery_name,
+                        b.city
+                        from kaggle_beers a
+                        inner join kaggle_breweries b
+                        on a.brewery_id = b.brewery_id;")
+```
+
+Lets drop the table that we have created.
+
+```{r, fig.show='hold'}
+db_send_query(post$con,"drop table kaggle_test")
+```
+
+## Data
+We're going to use the iris data set from R, which we will copy into database (Teradata) using DBI's `dbWriteTable` function.
+```{r, fig.show='hold'}
+copy_to(post$con,mtcars,"drj_mtcars")
+```
+
+It is that easy sending a dataframe from R to a database. Additional arguements of copy_to function.
+
+```
+conn: connection to database
+df: dataframe in R
+name: name of table in database
+overwrite: overwrite table in database
+unique_indexes: unique_indexes of table for database example.... unique_indexes=list(c('col_a', 'col_a'))
+indexes: indexes of table for database example.... indexes=list(c('col_a', 'col_a'))
+temporary: create a temporary table in database
+```
+Note. Go to DBI package and check out function `dbWritetable` to get a better understand in how to send dataframes to a database. 
+
+We can also connect to the table we have just created by using the `dplyr` function `tbl` and `sql`.
+
+```{r, fig.show='hold'}
+drj_mtcars<-tbl(post,"drj_mtcars")
+drj_mtcars<-tbl(post,sql("select * from tmg.drj_mtcars"))
+```
+
+## Lazy Evaluation
+Because it’s built on top of dplyr, connectR utilises lazy evaluation wherever possible. This means:
+
+- It never pulls data back to R unless you explicitly ask for it.
+- It delays doing any work until the last possible moment, collecting together everything you want to do then sending that to the database in one step.
+
+For example, take a look at the code below:
+
+```{r, fig.show='hold'}
+drj_mtcars1<-tbl(post,sql("select * from tmg.drj_mtcars"))
+drj_mtcars2<-drj_mtcars1 %>% 
+  filter(cyl==8)
+```
+
+The operations in the code do not actually run. Instead, connectR combines them all together and waits until the final data is actually needed, e.g. by printing it out, before executing the query.
+
+To force the operations to run you can call the `collect()` function, which returns the results as a dataframe. Alternatively, the `compute()` function can be used to execute the query and save it directly to a Teradata table without the data touching R. This is useful if you have a large data set that may not fit into your computer’s RAM.
+
+```{r, fig.show='hold'}
+drj_mtcars3<-collect(drj_mtcars2)
+knitr::kable(head(drj_mtcars3))
+```
+
+The `explain()` and `show_query()` functions can be used to understand how a set of queries will execute amd what query is being sent to the database.
+
+```{r, fig.show='hold'}
+explain(drj_mtcars2)
+```
+
+```{r, fig.show='hold'}
+show_query(drj_mtcars2)
+```
+
+Finally, lets be tidy and remove the mtcars table we created.
+
+```{r, fig.show='hold'}
+db_drop_table(post$con,"drj_mtcars")
+```
+
+**Side Note. db_send_query(con, statement, ...) can drop tables as well, by simply sql variant**

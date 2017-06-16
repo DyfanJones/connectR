@@ -1,0 +1,97 @@
+---
+title: "connectR Syntax"
+author: "Dyfan Jones"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Quick Overview of connectR Syntax
+### Connect to Databases Using `src_connectR`
+```{r, fig.show='hold', results="hide"}
+library(tidyverse)
+library(connectR)
+
+src_connectR("PostgreSQL35W",db="postgres")->post
+```
+
+### Push R Dataframes into TeraData Using `copy_to`
+```{r, fig.show='hold'}
+mtcars->mtcars1
+mtcars1$car<-rownames(mtcars1)
+rownames(mtcars1)<-NULL
+
+#Note. copy_to defaults temporary=FALSE
+copy_to(post$con,mtcars1,"drj_mtcars",indexes = list(c("mpg","hp")),overwrite=T)
+```
+
+### Select Columns Using `select`
+```{r, fig.show='hold'}
+drj_mtcars<-tbl(post,"drj_mtcars") %>% collect() 
+drj_mtcars %>% select(car, contains('a'), ends_with('s')) %>% head
+```
+
+### Extract Distinct Rows Using `distinct`
+```{r, fig.show='hold'}
+drj_mtcars %>% select(am) %>% distinct
+```
+
+### Add New Columns Using `mutate` 
+```{r, fig.show='hold'}
+drj_mtcars %>% select(-mpg,-wt,hp) %>% 
+  mutate(gear_no=ifelse(gear<=5,"high","low"),
+         car_type=ifelse(grepl("merc",tolower(car)),"nice","ordinary"),
+         cyl_squared=cyl^2,
+         row_number=row_number(drat)) %>% head
+```
+
+### Order Data Using `arrange` 
+```{r, fig.show='hold'}
+drj_mtcars %>% arrange(mpg)
+drj_mtcars %>% arrange(cyl, desc(mpg))
+```
+
+### Aggregate Rows Using `summarise` 
+```{r, fig.show='hold'}
+drj_mtcars %>% summarise(mpg_mean = mean(mpg),
+                         max_disp = max(disp))
+```
+
+### Group Operations Using `group_by` 
+```{r, fig.show='hold'}
+drj_mtcars %>% group_by(cyl) %>%
+  summarise(mpg_mean = mean(mpg),
+            max_disp = max(disp))
+
+drj_mtcars %>% group_by(cyl) %>% 
+  mutate(row_number = row_number(car)) %>% 
+  filter(row_number <= 3) %>% 
+  select(cyl, row_number) %>% 
+  arrange(cyl, row_number)
+```
+
+### Drop Data from database using `db_drop_table`
+```{r, fig.show='hold'}
+db_drop_table(post$con,"drj_mtcars")
+```
+
+### Sending queries to the databse using `db_send_query`
+```{r, fig.show='hold'}
+db_send_query(post$con,"create table kaggle_test as
+                        (Select
+                        a.name,
+                        a.style,
+                        a.abv,
+                        b.brewery_name,
+                        b.city
+                        from kaggle_beers a
+                        inner join kaggle_breweries b
+                        on a.brewery_id = b.brewery_id) with no data;")
+
+#Tidying up the database
+db_send_query(post$con,"drop table kaggle_test")
+```
+

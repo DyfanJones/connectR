@@ -1,0 +1,16 @@
+0.1.3
+- Built starting guide vignette to connectR
+- Build connectR_Syntax vignette
+- Built new function to send sql queries to databases db_send_query
+
+0.1.2
+- Added dplyr_utils for connectR
+
+0.1.1
+- Renamed package to connectR
+- Updated the connection function connectR, included encryption
+- Introduced a new function dbtbls, for easy of searching for tables owned on the data base.
+- Attached initial vignette for basic
+
+0.1.0
+- Initial release
