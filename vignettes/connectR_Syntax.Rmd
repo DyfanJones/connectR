@@ -15,7 +15,7 @@ vignette: >
 library(tidyverse)
 library(connectR)
 
-src_connectR("PostgreSQL35W",db="postgres")->post
+src_connectR("PostgreSQL35W")->post
 ```
 
 ### Push R Dataframes into TeraData Using `copy_to`

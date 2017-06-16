@@ -27,7 +27,7 @@ Once you've imported connectR into your session you can connect to Teradata (/ot
 library(tidyverse)
 library(connectR)
 
-post<-src_connectR(dsn="post64")
+post<-src_connectR("PostgreSQL35W")
 ```
 
 ## Checking the database
@@ -101,7 +101,7 @@ We can also connect to the table we have just created by using the `dplyr` funct
 
 ```{r, fig.show='hold'}
 drj_mtcars<-tbl(post,"drj_mtcars")
-drj_mtcars<-tbl(post,sql("select * from tmg.drj_mtcars"))
+drj_mtcars<-tbl(post,sql("select * from public.drj_mtcars"))
 ```
 
 ## Lazy Evaluation
@@ -113,7 +113,7 @@ Because it’s built on top of dplyr, connectR utilises lazy evaluation wherever
 For example, take a look at the code below:
 
 ```{r, fig.show='hold'}
-drj_mtcars1<-tbl(post,sql("select * from tmg.drj_mtcars"))
+drj_mtcars1<-tbl(post,sql("select * from public.drj_mtcars"))
 drj_mtcars2<-drj_mtcars1 %>% 
   filter(cyl==8)
 ```
