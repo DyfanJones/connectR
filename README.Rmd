@@ -15,7 +15,7 @@ connectR is a wrapper package built on the packages dplyr and dbplyr connecting 
 
 The src_connectR function attempts to be as user friendly as possible. By reducing the need of hard coding userid and password. Also defaulting to as standard database.
 
-```{r cars}
+```{r packages, results="hide", warning= FALSE, message= F}
 library(tidyverse)
 library(connectR)
 

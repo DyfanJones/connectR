@@ -23,7 +23,7 @@ It is recommended you import the `tidyverse`, `dbplyr`, `DBI` packages into your
 
 ## Connect to Teradata
 Once you've imported connectR into your session you can connect to Teradata (/other databases) using the `connectoR` function. 
-```{r, fig.show='hold', results="hide"}
+```{r packages, results="hide", warning= FALSE, message= F}
 library(tidyverse)
 library(connectR)
 

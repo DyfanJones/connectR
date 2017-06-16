@@ -11,7 +11,7 @@ vignette: >
 
 ## Quick Overview of connectR Syntax
 ### Connect to Databases Using `src_connectR`
-```{r, fig.show='hold', results="hide"}
+```{r packages, results="hide", warning= FALSE, message= F}
 library(tidyverse)
 library(connectR)
 
