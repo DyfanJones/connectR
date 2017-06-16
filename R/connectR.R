@@ -64,8 +64,8 @@ src_connectR <- function(dsn=NULL, uid=NULL, pwd=NULL, Update=F,db=NULL,..., aut
 
 
   #db default for Teradata and postgres
-  if(grepl("zeus",tolower(dsn)) && is.null(db)){
-    db<-"TMG"
+  if(grepl("Teradata",tolower(dsn)) && is.null(db)){
+    db<-"default" #will need changing dependent on user's default database.
   } else {db}
 
   if(grepl("post",tolower(dsn)) && is.null(db)){

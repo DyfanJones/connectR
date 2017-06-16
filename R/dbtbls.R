@@ -84,7 +84,7 @@ sbstr<-function(x){
 }
 
 dbase<-function(db){
-  if(is.null(db)){datab<-"TMG"} else {
+  if(is.null(db)){datab<-"default"} else {
     datab<-paste0(db, collapse="\', \'")}
   datab
 }
