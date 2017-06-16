@@ -6,28 +6,16 @@ Overview
 
 connectR is a wrapper package built on the packages dplyr and dbplyr connecting to databases using the package DBI, initially using odbc connections. connectR attempts to give a user friendly approach by removing the need to hard code passwords and userid for the connection to databases.
 
-con
+Usage
 ---
 
-You can include R code in the document as follows:
+The src_connectR function attempts to be as user friendly as possible. By reducing the need of hard coding userid and password. Also defaulting to as standard database.
 
 ``` r
-summary(cars)
+library(tidyverse)
+library(connectR)
+
+src_connectR("PostgreSQL35W")->post
 ```
 
-    ##      speed           dist       
-    ##  Min.   : 4.0   Min.   :  2.00  
-    ##  1st Qu.:12.0   1st Qu.: 26.00  
-    ##  Median :15.0   Median : 36.00  
-    ##  Mean   :15.4   Mean   : 42.98  
-    ##  3rd Qu.:19.0   3rd Qu.: 56.00  
-    ##  Max.   :25.0   Max.   :120.00
-
-Including Plots
----------------
-
-You can also embed plots, for example:
-
-![](README_files/figure-markdown_github/pressure-1.png)
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+**Note: connectR is in infancy it's infancy**
