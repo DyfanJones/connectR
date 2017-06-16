@@ -18,4 +18,4 @@ library(connectR)
 src_connectR("PostgreSQL35W")->post
 ```
 
-**Note: connectR is in infancy it's infancy**
+**Note: connectR is in it's infancy**
