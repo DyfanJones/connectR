@@ -1,6 +1,6 @@
 #'dbtbls function
 #'
-#'Function searches tables in entire datadata / schema.
+#'Searches the databases and schema and returns creator's name 
 #'@return Connection to database
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param db: Database name i.e. default

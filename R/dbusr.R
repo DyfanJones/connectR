@@ -1,6 +1,6 @@
 #'dbusr function
 #'
-#'Function searches specific databases / schemas specific for user.
+#'Searches the databases and schema for user created tables, returns skewness and size of tables.
 #'@return Connection to database
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param uid: User id for database

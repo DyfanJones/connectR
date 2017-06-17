@@ -1,6 +1,6 @@
 #'src_connectR function
 #'
-#'Function that connects to databases, and also ecrypt password for safe storage.
+#'Connects to databases currently using the odbc api, and also ecrypt password for safe storage.
 #'@return Connection to database
 #'@param dsn:The Data Source Name.
 #'@param uid: User id for database connecting to.
