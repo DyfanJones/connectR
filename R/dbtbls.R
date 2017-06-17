@@ -30,7 +30,7 @@ dbtbls<-function(conn, db=NULL, schema=NULL){
     
     query<-paste0(sel, fro, wh)
     
-    as.data.frame(tbl(conn,sql(query)))->result
+    collect(tbl(conn,sql(query)))->result
     result<-arrange(result,desc(SkewFactor))
     
   }
@@ -45,7 +45,7 @@ dbtbls<-function(conn, db=NULL, schema=NULL){
     
     query<-paste0(sel,fro,wh)
     
-    as.data.frame(tbl(conn,sql(query)))->result
+    collect(tbl(conn,sql(query)))->result
     result<-arrange(result, tableowner)
   }
   return(result)

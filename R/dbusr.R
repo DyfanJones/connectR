@@ -43,7 +43,7 @@ dbusr<-function(conn, uid=NULL,sbstr=NULL, db=NULL, schema=NULL){
 
     query<-paste0(sel, fro, wh)
 
-    as.data.frame(tbl(conn,sql(query)))->result
+    collect(tbl(conn,sql(query)))->result
     result<-arrange(result,desc(SkewFactor))
 
   }
@@ -60,7 +60,7 @@ dbusr<-function(conn, uid=NULL,sbstr=NULL, db=NULL, schema=NULL){
     query<-paste0(sel,fro,wh)
 
     tbl(conn,sql(query))->result
-    as.data.frame(tbl(conn,sql(query)))->result
+    collect(tbl(conn,sql(query)))->result
     dplyr::mutate(result,type = substr(size,nchar(size)-2,nchar(size)),
                   N = ifelse(type==tolower("kb"),as.numeric(substr(size, 1, nchar(size)-3)),
                              ifelse(type==tolower("mb"),as.numeric(substr(size, 1, nchar(size)-3))*0.001,
