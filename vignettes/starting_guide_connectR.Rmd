@@ -32,8 +32,11 @@ post<-src_connectR("PostgreSQL35W")
 
 ## Checking the database
 Let's look at the database and see what tables belong to me. Lucky for us connectR has a useful function `dbusr` that will search the database with tables have been specifically created by me.
-```{r, fig.show='hold'}
-knitr::kable(head(dbtbls(post)))
+```
+dbtbls(post,schema=c("public", "pg_catalog"))
+```
+```{r dbtbls, echo=FALSE}
+knitr::kable(head(dbtbls(post,schema=c("public", "pg_catalog"))))
 ```
 
 Behind the scence `dbtbls` is your user id, in this case 'LMAR763' and searching in the 'TMG' database on Teradata. `dbtbls` has a range of features that allow you change what database you want to search, what uid you want to search for or even down to 3 chacter name at the start of tables in the database i.e. 'DRJ'.
@@ -124,6 +127,8 @@ To force the operations to run you can call the `collect()` function, which retu
 
 ```{r, fig.show='hold'}
 drj_mtcars3<-collect(drj_mtcars2)
+```
+```{r drj_mtcars3, echo=FALSE}
 knitr::kable(head(drj_mtcars3))
 ```
 

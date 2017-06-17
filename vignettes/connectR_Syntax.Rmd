@@ -29,9 +29,13 @@ copy_to(post$con,mtcars1,"drj_mtcars",indexes = list(c("mpg","hp")),overwrite=T)
 ```
 
 ### Select Columns Using `select`
-```{r, fig.show='hold'}
+```{r, fig.show='hold', results =F}
 drj_mtcars<-tbl(post,"drj_mtcars") %>% collect() 
 drj_mtcars %>% select(car, contains('a'), ends_with('s')) %>% head
+```
+```{r, echo=F}
+drj_mtcars %>% select(car, contains('a'), ends_with('s'))->drj_knitr1
+knitr::kable(head(drj_knitr1))
 ```
 
 ### Extract Distinct Rows Using `distinct`
@@ -40,37 +44,66 @@ drj_mtcars %>% select(am) %>% distinct
 ```
 
 ### Add New Columns Using `mutate` 
-```{r, fig.show='hold'}
+```{r, fig.show='hold', results =F}
 drj_mtcars %>% select(-mpg,-wt,hp) %>% 
   mutate(gear_no=ifelse(gear<=5,"high","low"),
          car_type=ifelse(grepl("merc",tolower(car)),"nice","ordinary"),
-         cyl_squared=cyl^2,
-         row_number=row_number(drat)) %>% head
+         cyl_sq=cyl^2,
+         row_no=row_number(drat)) %>% head
+```
+```{r, echo=F}
+drj_mtcars %>% select(-mpg,-wt,hp) %>% 
+  mutate(gear_no=ifelse(gear<=5,"high","low"),
+         car_type=ifelse(grepl("merc",tolower(car)),"nice","ordinary"),
+         cyl_sq=cyl^2,
+         row_no=row_number(drat))->drj_knitr2
+knitr::kable(head(drj_knitr2))
 ```
 
 ### Order Data Using `arrange` 
-```{r, fig.show='hold'}
+```{r, fig.show='hold', results =F}
 drj_mtcars %>% arrange(mpg)
 drj_mtcars %>% arrange(cyl, desc(mpg))
 ```
+```{r, echo=F}
+knitr::kable(head(drj_mtcars %>% arrange(cyl, desc(mpg))))
+```
 
 ### Aggregate Rows Using `summarise` 
-```{r, fig.show='hold'}
+```{r, fig.show='hold', results =F}
 drj_mtcars %>% summarise(mpg_mean = mean(mpg),
                          max_disp = max(disp))
 ```
+```{r, echo=F}
+knitr::kable(drj_mtcars %>% summarise(mpg_mean = mean(mpg),
+                         max_disp = max(disp)))
+```
 
 ### Group Operations Using `group_by` 
-```{r, fig.show='hold'}
+```{r, fig.show='hold', results=F}
 drj_mtcars %>% group_by(cyl) %>%
   summarise(mpg_mean = mean(mpg),
             max_disp = max(disp))
+```
+```{r,echo=F}
+knitr::kable(drj_mtcars %>% group_by(cyl) %>%
+  summarise(mpg_mean = mean(mpg),
+            max_disp = max(disp)))
+```
+```{r, fig.show='hold', results=F}
 
 drj_mtcars %>% group_by(cyl) %>% 
   mutate(row_number = row_number(car)) %>% 
   filter(row_number <= 3) %>% 
   select(cyl, row_number) %>% 
   arrange(cyl, row_number)
+```
+```{r,echo=F}
+knitr::kable(drj_mtcars %>% group_by(cyl) %>% 
+  mutate(row_number = row_number(car)) %>% 
+  filter(row_number <= 3) %>% 
+  select(cyl, row_number) %>% 
+  arrange(cyl, row_number) %>% head)
 ```
 
 ### Drop Data from database using `db_drop_table`
