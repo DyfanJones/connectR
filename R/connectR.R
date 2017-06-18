@@ -29,7 +29,6 @@
 #'  as Update = TRUE, stored password will be updated:
 #'    connectR(dsn = "POSTGRES",Update=T)
 
-#, db=NULL
 
 #----Wrapper for connecting for a connection function -----
 src_connectR <- function(dsn=NULL, uid=NULL, pwd=NULL, Update=F,db=NULL,..., auto_disconnect = FALSE) {
@@ -72,7 +71,7 @@ src_connectR <- function(dsn=NULL, uid=NULL, pwd=NULL, Update=F,db=NULL,..., aut
     db<-"postgres"
   } else {db}
 
-  if(grepl(tolower("zeus"),dsn)){
+  if(grepl(tolower("tera"),dsn)){
     con<-DBI::dbConnect(odbc::odbc(),dsn=toupper(dsn),uid=uid, pwd=pwd,dbname=db,...)}
   else {
     con<-DBI::dbConnect(odbc::odbc(),dsn=toupper(dsn),uid=uid, pwd=pwd,database=db,...)
