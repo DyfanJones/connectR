@@ -9,7 +9,7 @@
 #'@export
 #'@examples
 #'  #Sending sql query to create table on database.
-#'    db_send_query(zeus$con, "create table hello as (select * from world) with no data;)
+#'    db_send_query(post$con, "create table hello as (select * from world) with no data;)
 
 
 #---- db_send_query ----

@@ -11,10 +11,10 @@
 #'
 #'@export
 #'@examples
-#'  #Standard connection to teradata and to database "CIS",
+#'  #Standard connection to teradata and to database "default",
 #'  unadviced as password in contained within the code:
 #'    src_connectR(dsn = "POSTGRES", uid = "USERNAME", pwd = "PaSsword",
-#'     db = "CIS", Update = F)
+#'     db = "default", Update = F)
 #'
 #'  #Standard connection to teradata and to all database,
 #'  unadviced as password in contained within the code:
