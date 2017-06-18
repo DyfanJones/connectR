@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_send_query.R
 \name{db_send_query}
 \alias{db_send_query}
-\title{db_send_query function}
+\title{db_send_uery sends SQL}
 \usage{
 db_send_query(con, statement, ...)
 }

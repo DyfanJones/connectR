@@ -1,4 +1,4 @@
-#'src_connectR function
+#'src_connectR connect to Databases
 #'
 #'Connects to databases currently using the odbc api, and also ecrypt password for safe storage.
 #'@return Connection to database

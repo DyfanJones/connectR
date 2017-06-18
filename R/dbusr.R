@@ -1,4 +1,4 @@
-#'dbusr function
+#'dbusr search database for user created tables
 #'
 #'Searches the databases and schema for user created tables, returns skewness and size of tables.
 #'@return Connection to database

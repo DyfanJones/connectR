@@ -2,7 +2,7 @@
 % Please edit documentation in R/dbusr.R
 \name{dbusr}
 \alias{dbusr}
-\title{dbusr function}
+\title{dbusr search database for user created tables}
 \usage{
 dbusr(conn, uid = NULL, sbstr = NULL, db = NULL, schema = NULL)
 }
@@ -21,7 +21,7 @@ dbusr(conn, uid = NULL, sbstr = NULL, db = NULL, schema = NULL)
 Connection to database
 }
 \description{
-Function searches specific databases / schemas specific for user.
+Searches the databases and schema for user created tables, returns skewness and size of tables.
 }
 \examples{
  #Search for default user (account signed into the computer)

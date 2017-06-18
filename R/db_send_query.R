@@ -1,4 +1,4 @@
-#'db_send_query function
+#'db_send_uery sends SQL
 #'
 #'Sends sql queries to the database.
 #'@return Sends sql queries directly to the database.

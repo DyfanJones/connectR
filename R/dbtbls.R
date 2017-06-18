@@ -1,4 +1,4 @@
-#'dbtbls function
+#'dbtbls Searches the databases and schema 
 #'
 #'Searches the databases and schema and returns creator's name 
 #'@return Connection to database

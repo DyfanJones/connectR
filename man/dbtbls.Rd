@@ -2,7 +2,7 @@
 % Please edit documentation in R/dbtbls.R
 \name{dbtbls}
 \alias{dbtbls}
-\title{dbtbls function}
+\title{dbtbls Searches the databases and schema}
 \usage{
 dbtbls(conn, db = NULL, schema = NULL)
 }
@@ -17,7 +17,7 @@ dbtbls(conn, db = NULL, schema = NULL)
 Connection to database
 }
 \description{
-Function searches tables in entire datadata / schema.
+Searches the databases and schema and returns creator's name
 }
 \examples{
  #Search for default user (account signed into the computer)

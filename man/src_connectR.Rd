@@ -2,7 +2,7 @@
 % Please edit documentation in R/connectR.R
 \name{src_connectR}
 \alias{src_connectR}
-\title{src_connectR function}
+\title{src_connectR connect to Databases}
 \usage{
 src_connectR(dsn = NULL, uid = NULL, pwd = NULL, Update = F,
   db = NULL, ..., auto_disconnect = FALSE)
@@ -24,7 +24,7 @@ src_connectR(dsn = NULL, uid = NULL, pwd = NULL, Update = F,
 Connection to database
 }
 \description{
-Function that connects to databases, and also ecrypt password for safe storage.
+Connects to databases currently using the odbc api, and also ecrypt password for safe storage.
 }
 \examples{
  #Standard connection to teradata and to database "CIS",
