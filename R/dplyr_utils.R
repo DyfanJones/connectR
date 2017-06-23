@@ -29,6 +29,7 @@ copy_to.src_connectR <-
            indexes = NULL,
            force=FALSE,
            append=FALSE,
+           primary=NULL,
            ...){
 
     assertthat::assert_that(is.data.frame(df),
@@ -43,7 +44,28 @@ copy_to.src_connectR <-
 
     # prevent confusion from having multiple classes
     class(df) <- "data.frame"
-
+    if(!is.null(primary)){
+      
+      db_create_primary(conn,name=name,value=df,primary=primary)
+      if(conn$info$dbms.name=="PostgreSQL"){names(df)<-tolower(names(df))}
+      
+      DBI::dbWriteTable(conn=conn$con,
+                        name=name,
+                        value=df,
+                        overwrite=overwrite,
+                        temporary=temporary,
+                        types=types,
+                        unique_indexes=unique_indexes,
+                        indexes = indexes,
+                        force=force,
+                        append=T,
+                        ...)
+      print(paste0("data.frame ", name,
+                   " with rows:",nrow(df)," size:",
+                   format(object.size(df), units = "auto"),
+                   " has been created in the database"))
+      
+    }else{
     DBI::dbWriteTable(conn=conn$con,
                       name=name,
                       value=df,
@@ -55,11 +77,12 @@ copy_to.src_connectR <-
                       force=force,
                       append=append,
                       ...)
-
+    
     print(paste0("data.frame ", name,
                  " with rows:",nrow(df)," size:",
                  format(object.size(df), units = "auto"),
                  " has been created in the database"))
+    }
   }
 
 
@@ -103,82 +126,3 @@ sql_escape_ident.src_connectR <- function(con, x) {
 }
 
 
-#---- db_insert_into ----
-# needs work on to iron out the bugs
-db_insert_into.connectR_connection <-
-  function(con, table, values, overwrite=F, ...) {
-    assertthat::assert_that(assertthat::is.string(table),
-                            is.data.frame(values),
-                            assertthat::is.flag(overwrite))
-    if (nrow(values) == 0) {
-      return(NULL)
-    }
-    DBI::sqlAppendTable(con,table,values,...)->sql
-
-    DBI::dbExecute(con, sql)
-  }
-
-#---- Create_table ----
-#needs work on to iron out the bugs
-db_create_table.connectR_connection <-
-  function (con,
-            table,
-            types,
-            temporary = FALSE,
-            external = FALSE,
-            force = FALSE,
-            field_terminator = NULL,
-            line_terminator = NULL,
-            file_format = NULL,
-            ...) {
-    # TBD: add params to control location and other CREATE TABLE options
-
-    assertthat::assert_that(
-      assertthat::is.string(table),
-      assertthat::is.character(types),
-      assertthat::is.flag(temporary),
-      assertthat::is_string_or_null(file_format),
-      assertthat::is_nchar_one_string_or_null(field_terminator),
-      assertthat::is_nchar_one_string_or_null(line_terminator)
-    )
-    if (temporary) {
-      stop(
-        "connectR does not support temporary tables. Set temporary = FALSE in db_create_table().",
-        call. = FALSE
-      )
-    }
-    field_names <-
-      escape(ident(names(types)), collapse = NULL, con = con)
-    fields <- sql_vector(
-      paste0(field_names, " ", types),
-      parens = TRUE,
-      collapse = ", ",
-      con = con
-    )
-    sql <- dbplyr::build_sql("CREATE ",
-                     if (external) {
-                       sql("EXTERNAL ")
-                     },
-                     "TABLE ",
-                     if (force) {
-                       sql("IF NOT EXISTS ")
-                     },
-                     ident(table),
-                     " ",
-                     if (!is.null(field_terminator) ||
-                         !is.null(line_terminator)) {
-                       sql("ROW FORMAT DELIMITED ")
-                     },
-                     if (!is.null(field_terminator)) {
-                       sql(paste0("FIELDS TERMINATED BY \"", field_terminator, "\" "))
-                     },
-                     if (!is.null(line_terminator)) {
-                       sql(paste0("LINES TERMINATED BY \"", line_terminator, "\" "))
-                     },
-                     if (!is.null(file_format)) {
-                       sql(paste0("STORED AS ", file_format, " "))
-                     },
-                     fields,
-                     con = con)
-    DBI::dbExecute(con, sql)
-  }
