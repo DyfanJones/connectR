@@ -11,7 +11,7 @@
 #'
 #'@export
 #'@examples
-#'  #Standard connection to teradata and to database "postgres",
+#'  #Standard connection to Teradata and to database "postgres",
 #'  unadviced as password in contained within the code:
 #'    src_connectR(dsn = "POSTGRES", uid = "USERNAME", pwd = "PaSsword",
 #'     db = "postgres", Update = F)
@@ -63,7 +63,7 @@ src_connectR <- function(dsn=NULL, uid=NULL, pwd=NULL, Update=F,db=NULL,..., aut
 
 
   #db default for Teradata and postgres
-  if(grepl("tera",tolower(dsn)) && is.null(db)){
+  if(grepl("Teradata",tolower(dsn)) && is.null(db)){
     db<-"default" #will need changing dependent on user's default database.
   } else {db}
 
@@ -71,12 +71,8 @@ src_connectR <- function(dsn=NULL, uid=NULL, pwd=NULL, Update=F,db=NULL,..., aut
     db<-"postgres"
   } else {db}
 
-  if(grepl("tera",tolower(dsn))){
-    con<-DBI::dbConnect(odbc::odbc(),dsn=toupper(dsn),uid=uid, pwd=pwd,dbname=db,...)}
-  else {
-    con<-DBI::dbConnect(odbc::odbc(),dsn=toupper(dsn),uid=uid, pwd=pwd,database=db,...)
-  }
-
+  con<-DBI::dbConnect(odbc::odbc(),dsn=toupper(dsn),uid=uid, pwd=pwd,database=db,...)
+  
   ##details for class
   info<-DBI::dbGetInfo(con)
   info$package<-attr(attr(getClass(class(con)[1]), "className"), "package")

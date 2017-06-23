@@ -26,7 +26,7 @@ dbtbls<-function(conn, db=NULL, schema=NULL){
     
     sel<-"SELECT A.TABLENAME, B.CREATORNAME, B.CREATETIMESTAMP"
     fro<-" FROM DBC.TABLESIZE A, DBC.TABLES B"
-    wh<-paste0(" WHERE A.DATABASENAME IN (\'", db, "\') AND A.TABLENAME=B.TABLENAME GROUP BY 1,4,5")
+    wh<-paste0(" WHERE A.DATABASENAME IN (\'", db, "\') AND A.TABLENAME=B.TABLENAME")
     
     query<-paste0(sel, fro, wh)
     

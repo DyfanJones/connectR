@@ -21,14 +21,16 @@ If you've not used dplyr before, it's recommended you read the official dplyr tu
 ## Installation And Usage
 It is recommended you import the `tidyverse`, `dbplyr`, `DBI` packages into your R session before `connectR` as `connectR` relies on some of these package base functions.
 
-## Connect to Teradata
+## Connect to Databases
 Once you've imported connectR into your session you can connect to Teradata (/other databases) using the `connectoR` function. 
 ```{r packages, results="hide", warning= FALSE, message= F}
 library(tidyverse)
 library(connectR)
 
-post<-src_connectR("PostgreSQL35W")
+post<-src_connectR(dsn="PostgreSQL35W")
 ```
+
+*Note: "PostgreSQL35W" is the Data Source Name of the odbc that connects a postgres database.*
 
 ## Checking the database
 Let's look at the database and see what tables belong to me. Lucky for us connectR has a useful function `dbusr` that will search the database with tables have been specifically created by me.
@@ -48,7 +50,7 @@ connectR can also send queries to the database allowing large sql queries to be 
 Lets create a table.
 
 ```{r, fig.show='hold'}
-db_send_query(post$con,"create table kaggle_test as
+db_send_query(post,"create table kaggle_test as
                         (Select
                         a.name,
                         a.style,
@@ -63,7 +65,7 @@ db_send_query(post$con,"create table kaggle_test as
 Lets now populate the new table we have just created.
 
 ```{r, fig.show='hold'}
-db_send_query(post$con,"insert into kaggle_test
+db_send_query(post,"insert into kaggle_test
                         Select
                         a.name,
                         a.style,
@@ -78,13 +80,13 @@ db_send_query(post$con,"insert into kaggle_test
 Lets drop the table that we have created.
 
 ```{r, fig.show='hold'}
-db_send_query(post$con,"drop table kaggle_test")
+db_send_query(post,"drop table kaggle_test")
 ```
 
 ## Data
 We're going to use the iris data set from R, which we will copy into database (Teradata) using DBI's `dbWriteTable` function.
 ```{r, fig.show='hold'}
-copy_to(post$con,mtcars,"drj_mtcars")
+copy_to(post,mtcars,"drj_mtcars")
 ```
 
 It is that easy sending a dataframe from R to a database. Additional arguements of copy_to function.

@@ -25,7 +25,7 @@ mtcars1$car<-rownames(mtcars1)
 rownames(mtcars1)<-NULL
 
 #Note. copy_to defaults temporary=FALSE
-copy_to(post$con,mtcars1,"drj_mtcars",indexes = list(c("mpg","hp")),overwrite=T)
+copy_to(post,mtcars1,"drj_mtcars",indexes = list(c("mpg","hp")),overwrite=T)
 ```
 
 ### Select Columns Using `select`
@@ -113,7 +113,7 @@ db_drop_table(post$con,"drj_mtcars")
 
 ### Sending queries to the databse using `db_send_query`
 ```{r, fig.show='hold'}
-db_send_query(post$con,"create table kaggle_test as
+db_send_query(post,"create table kaggle_test as
                         (Select
                         a.name,
                         a.style,
@@ -125,6 +125,6 @@ db_send_query(post$con,"create table kaggle_test as
                         on a.brewery_id = b.brewery_id) with no data;")
 
 #Tidying up the database
-db_send_query(post$con,"drop table kaggle_test")
+db_send_query(post,"drop table kaggle_test")
 ```
 

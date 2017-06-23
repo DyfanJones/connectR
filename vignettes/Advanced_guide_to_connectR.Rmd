@@ -24,7 +24,7 @@ src_connectR("PostgreSQL35W")->post
 
 - **method 1:**
 ```{r, fig.show='hold'}
-db_send_query(post$con,"create table kaggle_test as
+db_send_query(post,"create table kaggle_test as
                         (Select
                         a.name,
                         a.style,
@@ -35,7 +35,7 @@ db_send_query(post$con,"create table kaggle_test as
                         inner join kaggle_breweries b
                         on a.brewery_id = b.brewery_id) with no data;")
 
-db_send_query(post$con,"insert into kaggle_test
+db_send_query(post,"insert into kaggle_test
                         Select
                         a.name,
                         a.style,
@@ -53,7 +53,7 @@ tbl(post,"kaggle_test")
 ```
 
 ```{r, fig.show='hold'}
-db_send_query(post$con,"drop table kaggle_test")
+db_send_query(post,"drop table kaggle_test")
 ```
 
 - **Method 2:**

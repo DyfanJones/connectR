@@ -16,6 +16,6 @@
 db_send_query<-function(con, statement, ...){
   assertthat::assert_that(
     assertthat::is.string(statement))
-  suppressWarnings(DBI::dbSendStatement(con,statement, ...))
+  suppressWarnings(DBI::dbSendStatement(con$con,statement, ...))
 }
 

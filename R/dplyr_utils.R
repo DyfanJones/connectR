@@ -4,19 +4,21 @@ tbl.src_connectR <- function(src, from, ...) {
   tryCatch(
     {
       dbplyr::tbl_sql("connectR", src=src, from=from, ...)
-    },
-    error=function(cond) {
-      if (dplyr:::isFALSE(db_has_table(src$con, from))) {
-        stop("Table ", from, " not found in database ", src$path, call. = FALSE)
-      }
-      return(cond)
     }
   )
 }
 
+
+#,
+#error=function(cond) {
+#  if (dplyr:::isFALSE(db_has_table(src$con, from))) {
+#    stop("Table ", from, " not found in database ", src$path, call. = FALSE)
+#  }
+#  return(cond)
+#}
 #---- copy_to ----
 
-copy_to.connectR_connection <-
+copy_to.src_connectR <-
   function(conn,
            df,
            name = deparse(substitute(df)),
@@ -26,6 +28,7 @@ copy_to.connectR_connection <-
            unique_indexes = NULL,
            indexes = NULL,
            force=FALSE,
+           append=FALSE,
            ...){
 
     assertthat::assert_that(is.data.frame(df),
@@ -41,7 +44,7 @@ copy_to.connectR_connection <-
     # prevent confusion from having multiple classes
     class(df) <- "data.frame"
 
-    DBI::dbWriteTable(conn=conn,
+    DBI::dbWriteTable(conn=conn$con,
                       name=name,
                       value=df,
                       overwrite=overwrite,
@@ -50,6 +53,7 @@ copy_to.connectR_connection <-
                       unique_indexes=unique_indexes,
                       indexes = indexes,
                       force=force,
+                      append=append,
                       ...)
 
     print(paste0("data.frame ", name,

@@ -27,7 +27,7 @@ Connection to database
 Connects to databases currently using the odbc api, and also ecrypt password for safe storage.
 }
 \examples{
- #Standard connection to teradata and to database "postgres",
+ #Standard connection to Teradata and to database "postgres",
  unadviced as password in contained within the code:
    src_connectR(dsn = "POSTGRES", uid = "USERNAME", pwd = "PaSsword",
     db = "postgres", Update = F)
