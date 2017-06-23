@@ -23,8 +23,9 @@ src_connectR("PostgreSQL35W")->post
 mtcars->mtcars1
 mtcars1$car<-rownames(mtcars1)
 rownames(mtcars1)<-NULL
-
-#Note. copy_to defaults temporary=FALSE
+```
+**Note. copy_to defaults temporary=FALSE**
+```{r, fig.show='hold'}
 copy_to(post,mtcars1,"drj_mtcars",indexes = list(c("mpg","hp")),overwrite=T)
 ```
 
