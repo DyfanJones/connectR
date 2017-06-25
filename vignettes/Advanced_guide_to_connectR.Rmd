@@ -95,3 +95,63 @@ inner_join(beers,breweries,
   filter(city=="San Francisco")%>% show_query
 ```
 As long as you write working R dplyr code, dplyr is rebust enough to generate the SQL variant. This makes R dplyr a really useful tool kit within the R family.
+
+## How to set create a table with primary indexes/ keys: 'copy_to'
+We have used alot of features within the connectR package, however connectR has some hidden features within dplyr functions. For example connectR offers a feature of creating primary indexes / keys for new tables in databases. To do this connectR utilises a function called `db_create_primary`. This function just creates a table with no database on a data frame within R. Lets see how this works within the dplyr function `copy_to` function.
+
+Let's start with a complicated dataset.
+
+```{r, fig.show='hold'}
+read_csv("D:/Program_Files/R_Code/Projects/Kaggle/1. Data/Pokemon.csv")-> Pokemon
+names(Pokemon)
+```
+This data.frame contains " " and "." within the variable titles. This can causes issues when sending this data frame to a database. However connectR has built in feature when sending over to databses. let's see how connectR can handle this situation.
+```{r, fig.show='hold'}
+# split the data.frame into test and predict.
+test<-sample_frac(Pokemon,0.8)
+predict<-setdiff(Pokemon,test)
+
+copy_to(post,test,"testtable",indexes=list(c("type_1","type_2")),primary=c("x","name"))
+```
+It is as easy as that, connectR will do the hard work of convert R data types into the relavent databases. connectR has created the primary keys "x" and "name" alsoand index "type_1" and "type_2". It also has converted "." and " " so that the user don't have to worry. What about inserting new data into a data table.
+```{r, fig.show='hold'}
+copy_to(post,predict,"testtable",append=T)
+
+```
+connectR will also take care of the inserting into to a database when the value names haven't been converted to match the database version.
+```{r, fig.show='hold'}
+names(predict)
+tbl(post,"testtable") %>% collect %>% names
+```
+Finally how do we know if connectR has created a primary key/ index and index on the table `testtable`?
+```{r, fig.show='hold'}
+tbl(post,sql("select 
+                t.relname as table_name,
+                i.relname as index_name,
+                a.attname as column_name,
+                a.attnum,
+                ix.indkey,
+                t.relkind,
+                case when substr(i.relname,strpos(i.relname,'_')+1,4) = 'pkey' then 'pkey' else 'index' end as type
+              from 
+                pg_class t
+              inner join 
+                pg_index ix
+                on t.oid = ix.indrelid
+              inner join
+                pg_attribute a
+                on a.attrelid = t.oid
+              inner join 
+                pg_class i
+                on ix.indexrelid = i.oid")) %>% 
+  filter(attnum==any(indkey),
+         relkind == 'r',
+         table_name  %like% 'test%') %>%
+  select (1,3,type)
+```
+Here we use a combination of SQL and R code to query the database. From here we can see that primary keys "x" and "name" have been create, also "type_1", "type_2" has been created as indexes. From this we can see connectR offers alot of functionality for R to connect databases.
+
+Lets clear up the database.
+```{r, fig.show='hold'}
+db_drop_table(post$con,"testtable")
+```
