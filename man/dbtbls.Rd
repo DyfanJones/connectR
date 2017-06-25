@@ -14,7 +14,7 @@ dbtbls(conn, db = NULL, schema = NULL)
 \item{schema:}{Database schema i.e public}
 }
 \value{
-Connection to database
+Returns all tables from the database.
 }
 \description{
 Searches the databases and schema and returns creator's name

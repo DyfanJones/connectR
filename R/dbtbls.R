@@ -1,11 +1,10 @@
 #'dbtbls Searches the databases and schema 
 #'
 #'Searches the databases and schema and returns creator's name 
-#'@return Connection to database
+#'@return Returns all tables from the database.
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param db: Database name i.e. default
 #'@param schema: Database schema i.e public
-#'
 #'@export
 #'@examples
 #'  #Search for default user (account signed into the computer)

@@ -18,7 +18,7 @@ dbusr(conn, uid = NULL, sbstr = NULL, db = NULL, schema = NULL)
 \item{schema:}{Database schema i.e public}
 }
 \value{
-Connection to database
+Returns all tables user has created from the database.
 }
 \description{
 Searches the databases and schema for user created tables, returns skewness and size of tables.
