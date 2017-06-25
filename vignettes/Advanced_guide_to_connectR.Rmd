@@ -155,7 +155,7 @@ Lets clear up the database.
 db_drop_table(post$con,"testtable")
 ```
 
-## How to transfer tables from intial database to the next `copy_loop_to`
+## How to transfer tables from intial database to another: `copy_loop_to`
 Finally connectR allows tables to be transferred from the initial database to another. This is helpful when 2 databases do not communicate with one another. `copy_loop_to` transfers tables in batch so that it doesn't overload R's memory. `copy_loop_to` will only send data to a existing table on the target database. To do this we can use the `db_create_primary` function to create an empty table with primary keys or indexes. We can the use `copy_loop_to` function for the transfer.
 
 ```{r, fig.show='hold'}
