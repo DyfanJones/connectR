@@ -96,7 +96,7 @@ inner_join(beers,breweries,
 ```
 As long as you write working R dplyr code, dplyr is rebust enough to generate the SQL variant. This makes R dplyr a really useful tool kit within the R family.
 
-## How to set create a table with primary indexes/ keys: 'copy_to'
+## How to create a table with primary indexes/ keys: 'copy_to'
 We have used alot of features within the connectR package, however connectR has some hidden features within dplyr functions. For example connectR offers a feature of creating primary indexes / keys for new tables in databases. To do this connectR utilises a function called `db_create_primary`. This function just creates a table with no database on a data frame within R. Lets see how this works within the dplyr function `copy_to` function.
 
 Let's start with a complicated dataset.
