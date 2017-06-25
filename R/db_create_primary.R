@@ -47,7 +47,7 @@ db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL){
   dplyr::sql(paste0(crt, values, prim, k))->SQL
   DBI::dbExecute(conn$con, SQL)
   
-  print(paste0("Table ", name, " has been created on",
+  print(paste0("Table ", name, " has been created on ",
                conn$info$dbms.name, " with primary indexes / keys (",
                p,")"))
 }
