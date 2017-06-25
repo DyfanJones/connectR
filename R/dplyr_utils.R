@@ -8,14 +8,6 @@ tbl.src_connectR <- function(src, from, ...) {
   )
 }
 
-
-#,
-#error=function(cond) {
-#  if (dplyr:::isFALSE(db_has_table(src$con, from))) {
-#    stop("Table ", from, " not found in database ", src$path, call. = FALSE)
-#  }
-#  return(cond)
-#}
 #---- copy_to ----
 
 copy_to.src_connectR <-
@@ -25,8 +17,8 @@ copy_to.src_connectR <-
            overwrite=FALSE,
            temporary = FALSE,
            types = NULL,
-           unique_indexes = NULL,
            indexes = NULL,
+           unique_indexes = NULL,
            force=FALSE,
            append=FALSE,
            primary=NULL,
@@ -46,6 +38,9 @@ copy_to.src_connectR <-
     class(df) <- "data.frame"
     if(!is.null(primary)){
       
+      gsub("\\.","",names(df))->names(df)
+      gsub(" ","_",trimws(names(df)))->names(df)
+      
       db_create_primary(conn,name=name,value=df,primary=primary)
       if(conn$info$dbms.name=="PostgreSQL"){names(df)<-tolower(names(df))}
       
@@ -58,25 +53,45 @@ copy_to.src_connectR <-
                         unique_indexes=unique_indexes,
                         indexes = indexes,
                         force=force,
-                        append=T,
+                        append=TRUE,
                         ...)
+      #crude method to add indexes
+      if(!is.null(indexes)|!is.null(unique_indexes)){
+        if(is.null(unique_indexes)){
+          db_create_indexes(conn$con,name,indexes,unique=FALSE)
+        } else {
+          db_create_indexes(conn$con,name,unique_indexes,unique=TRUE)
+        }
+      }
+      
       print(paste0("data.frame ", name,
                    " with rows:",nrow(df)," size:",
                    format(object.size(df), units = "auto"),
                    " has been created in the database"))
       
     }else{
+      
+    gsub("\\.","",names(df))->names(df)
+    gsub(" ","_",trimws(names(df)))->names(df)
+    if(conn$info$dbms.name=="PostgreSQL"){names(df)<-tolower(names(df))}
+    
     DBI::dbWriteTable(conn=conn$con,
                       name=name,
                       value=df,
                       overwrite=overwrite,
                       temporary=temporary,
                       types=types,
-                      unique_indexes=unique_indexes,
-                      indexes = indexes,
                       force=force,
                       append=append,
                       ...)
+      #crude method to add indexes
+      if(!is.null(indexes)|!is.null(unique_indexes)){
+        if(is.null(unique_indexes)){
+          db_create_indexes(conn$con,name,indexes,unique=FALSE)
+        } else {
+          db_create_indexes(conn$con,name,unique_indexes,unique=TRUE)
+        }
+      }
     
     print(paste0("data.frame ", name,
                  " with rows:",nrow(df)," size:",

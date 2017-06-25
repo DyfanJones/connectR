@@ -22,7 +22,7 @@ Connection to database
 Creates a table in the database from a dataframe and creates primary keys/ indexes
 }
 \examples{
- #Search for default user (account signed into the computer)
-  tables in the database default.
+ #Creates a table with no data on the database, but allows primary 
+ keys/indexes to be created:
    db_create_primary(post, "testdata", testdata, c("col1","col2"))
 }

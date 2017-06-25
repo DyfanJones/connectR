@@ -9,8 +9,8 @@
 #'
 #'@export
 #'@examples
-#'  #Search for default user (account signed into the computer)
-#'   tables in the database default.
+#'  #Creates a table with no data on the database, but allows primary 
+#'  keys/indexes to be created:
 #'    db_create_primary(post, "testdata", testdata, c("col1","col2"))
 
 db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL){
@@ -28,6 +28,9 @@ db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL){
     t[i,2]<-dbtype[i]
   }
   
+  gsub("\\.","",t[[1]])->t[[1]]
+  gsub(" ","_",trimws(t[[1]]))->t[[1]]
+  
   rows <- apply(t, 1, paste0, collapse = " ")
   values <- paste0(rows, collapse = ",\n ")
   
@@ -42,6 +45,5 @@ db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL){
   }
   
   dplyr::sql(paste0(crt, values, prim, k))->SQL
-  SQL
   DBI::dbExecute(conn$con, SQL)
 }
