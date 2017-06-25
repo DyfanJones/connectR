@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_create_primary.R
 \name{db_create_primary}
 \alias{db_create_primary}
-\title{db_create_primary search database for user created tables}
+\title{db_create_primary creates empty table with primary indexes/ keys}
 \usage{
 db_create_primary(conn, name = NULL, value = NULL, primary = NULL)
 }
@@ -16,7 +16,7 @@ db_create_primary(conn, name = NULL, value = NULL, primary = NULL)
 \item{primary:}{Column(s) to created to primary keys / indexes.}
 }
 \value{
-Connection to database
+Empty table in database with primary keys/ indexes
 }
 \description{
 Creates a table in the database from a dataframe and creates primary keys/ indexes

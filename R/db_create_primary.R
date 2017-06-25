@@ -1,7 +1,7 @@
-#'db_create_primary search database for user created tables
+#'db_create_primary creates empty table with primary indexes/ keys
 #'
 #'Creates a table in the database from a dataframe and creates primary keys/ indexes
-#'@return Connection to database
+#'@return Empty table in database with primary keys/ indexes 
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param name: Name of table on the database
 #'@param value: Data.frame
@@ -46,4 +46,8 @@ db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL){
   
   dplyr::sql(paste0(crt, values, prim, k))->SQL
   DBI::dbExecute(conn$con, SQL)
+  
+  print(paste0("Table ", name, " has been created on",
+               conn$info$dbms.name, " with primary indexes / keys (",
+               p,")"))
 }
