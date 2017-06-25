@@ -1,5 +1,6 @@
 0.14
 - Built db_create_primary  function
+- Built copy_loop_to function
 - Gave  copy_to function to create primary indexes / keys
 - Updated vignettes
 
