@@ -50,30 +50,4 @@ dbtbls<-function(conn, db=NULL, schema=NULL){
   return(result)
 }
 
-UID<-function(conn, uid){
-  if(conn$info$dbms.name=="Teradata"){
-    if(is.null(uid)){UID<-paste0(toupper(Sys.getenv('USERNAME')),"\'",", \'","SAS_",Sys.getenv('USERNAME'))
-    } else {UID<-paste0(uid,collapse="\', \'")}
-  } else {
-    if(is.null(uid)){UID<-paste0((Sys.getenv('USERNAME')))
-    } else {UID<-paste0(uid,collapse="\', \'")}}
-  UID
-}
 
-sbstr<-function(x){
-  if(is.null(x)){sbstr<-""} else {x<-paste0(x, collapse="\', \'")
-  sbstr<-paste0(" OR SUBSTR(A.TABLENAME,1,3) IN (\'",x,"\')")}
-  sbstr
-}
-
-dbase<-function(conn,db){
-  if(is.null(db)){datab<-conn$info$dbname} else {
-    datab<-paste0(db, collapse="\', \'")}
-  datab
-}
-
-schem<-function(schema){
-  if(is.null(schema)){schema<-"public"} else {
-    schema<-paste0(schema, collapse="\', \'")}
-  schema
-}
