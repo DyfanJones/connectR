@@ -26,7 +26,7 @@ copy_loop_to<-function(conn1,conn2=NULL, name, n=NULL, statement){
   
   if(is.null(conn2)){
     conn=conn1
-  }
+  } else {conn=conn2}
   
   while(!DBI::dbHasCompleted(res)){
     chunk<-DBI::dbFetch(res,n=n)
