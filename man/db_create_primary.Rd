@@ -4,7 +4,8 @@
 \alias{db_create_primary}
 \title{db_create_primary creates empty table with primary indexes/ keys}
 \usage{
-db_create_primary(conn, name = NULL, value = NULL, primary = NULL)
+db_create_primary(conn, name = NULL, value = NULL, primary = NULL,
+  query = FALSE)
 }
 \arguments{
 \item{conn:}{Connection to database. Can used assigned output from function connectR for the connection.}
@@ -22,7 +23,7 @@ Empty table in database with primary keys/ indexes
 Creates a table in the database from a dataframe and creates primary keys/ indexes
 }
 \examples{
- #Creates a table with no data on the database, but allows primary 
+ #Creates a table with no data on the database, but allows primary
  keys/indexes to be created:
    db_create_primary(post, "testdata", testdata, c("col1","col2"))
 }

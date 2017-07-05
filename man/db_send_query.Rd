@@ -2,9 +2,9 @@
 % Please edit documentation in R/db_send_query.R
 \name{db_send_query}
 \alias{db_send_query}
-\title{db_send_uery sends SQL}
+\title{db_send_query sends SQL}
 \usage{
-db_send_query(con, statement, ...)
+db_send_query(conn, statement, ...)
 }
 \arguments{
 \item{con:}{Connection to database. Can used assigned output from function connectR for the connection.}

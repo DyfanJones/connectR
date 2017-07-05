@@ -4,7 +4,7 @@
 \alias{src_connectR}
 \title{src_connectR connect to Databases}
 \usage{
-src_connectR(dsn = NULL, uid = NULL, pwd = NULL, Update = F,
+src_connectR(dsn = NULL, uid = NULL, pwd = NULL, Update = FALSE,
   db = NULL, ..., auto_disconnect = FALSE)
 }
 \arguments{
@@ -14,7 +14,7 @@ src_connectR(dsn = NULL, uid = NULL, pwd = NULL, Update = F,
 
 \item{pwd:}{User password for database}
 
-\item{db:}{Database name i.e. default}
+\item{db:}{Database name i.e. TMG}
 
 \item{Update:}{Update encrypted password}
 
@@ -27,7 +27,7 @@ Connection to database
 Connects to databases currently using the odbc api, and also ecrypt password for safe storage.
 }
 \examples{
- #Standard connection to Teradata and to database "postgres",
+ #Standard connection to teradata and to database "postgres",
  unadviced as password in contained within the code:
    src_connectR(dsn = "POSTGRES", uid = "USERNAME", pwd = "PaSsword",
     db = "postgres", Update = F)
