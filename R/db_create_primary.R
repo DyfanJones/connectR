@@ -1,7 +1,7 @@
 #'db_create_primary creates empty table with primary indexes/ keys
 #'
 #'Creates a table in the database from a dataframe and creates primary keys/ indexes
-#'@return Empty table in database with primary keys/ indexes 
+#'@return Empty table in database with primary keys/ indexes
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param name: Name of table on the database
 #'@param value: Data.frame
@@ -9,14 +9,17 @@
 #'
 #'@export
 #'@examples
-#'  #Creates a table with no data on the database, but allows primary 
+#'  #Creates a table with no data on the database, but allows primary
 #'  keys/indexes to be created:
 #'    db_create_primary(post, "testdata", testdata, c("col1","col2"))
 
-db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL){
+db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL, query = FALSE){
   assertthat::assert_that(assertthat::is.string(name),
                           is.data.frame(value),
                           is.character(primary))
+  
+  vars <- names(value)
+  assertthat::assert_that(all(tolower(unlist(primary)) %in% tolower(vars)))
   
   dplyr::db_data_type(conn$con,value)->dbtype
   
@@ -41,10 +44,15 @@ db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL){
     k<- paste0(p, ");")
   } else {
     prim<-", \n PRIMARY KEY ("
-    k<- paste0(p, "));") 
+    k<- paste0(p, "));")
   }
   
   dplyr::sql(paste0(crt, values, prim, k))->SQL
+  
+  if(query==T){
+    return(SQL)
+  }
+  
   DBI::dbExecute(conn$con, SQL)
   
   print(paste0("Table ", name, " has been created on ",

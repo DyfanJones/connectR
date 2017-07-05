@@ -1,6 +1,6 @@
-#'dbtbls Searches the databases and schema 
+#'dbtbls Searches the databases and schema
 #'
-#'Searches the databases and schema and returns creator's name 
+#'Searches the databases and schema and returns creator's name
 #'@return Returns all tables from the database.
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param db: Database name i.e. default
@@ -19,19 +19,18 @@
 
 dbtbls<-function(conn, db=NULL, schema=NULL){
   
-   if (conn$info$dbms.name=="Teradata"){
+  if (conn$info$dbms.name=="Teradata"){
     
     db<-dbase(conn,db)
     
-    sel<-"SELECT A.TABLENAME, B.CREATORNAME, B.CREATETIMESTAMP"
-    fro<-" FROM DBC.TABLESIZE A, DBC.TABLES B"
-    wh<-paste0(" WHERE A.DATABASENAME IN (\'", db, "\') AND A.TABLENAME=B.TABLENAME")
+    sel<- "SELECT DATABASENAME, TABLENAME, CREATORNAME, CREATEDATE"
+    fro<- " FROM CIS.TABLE_DETAIL"
+    wh<- paste0(" WHERE DATABASENAME IN (\'", db, "\')")
     
     query<-paste0(sel, fro, wh)
     
     collect(tbl(conn,sql(query)))->result
-    result<-arrange(result,desc(SkewFactor))
-    
+    result<-arrange(result,TABLENAME,CREATORNAME)
   }
   
   if(conn$info$dbms.name=="PostgreSQL") {
@@ -50,4 +49,30 @@ dbtbls<-function(conn, db=NULL, schema=NULL){
   return(result)
 }
 
+UID<-function(conn, uid){
+  if(conn$info$dbms.name=="Teradata"){
+    if(is.null(uid)){UID<-paste0(toupper(Sys.getenv('USERNAME')),"\'",", \'","SAS_",Sys.getenv('USERNAME'))
+    } else {UID<-paste0(uid,collapse="\', \'")}
+  } else {
+    if(is.null(uid)){UID<-paste0((Sys.getenv('USERNAME')))
+    } else {UID<-paste0(uid,collapse="\', \'")}}
+  UID
+}
 
+sbstr<-function(x){
+  if(is.null(x)){sbstr<-""} else {x<-paste0(x, collapse="\', \'")
+  sbstr<-paste0(" OR SUBSTR(A.TABLENAME,1,3) IN (\'",x,"\')")}
+  sbstr
+}
+
+dbase<-function(conn,db){
+  if(is.null(db)){datab<-conn$info$dbname} else {
+    datab<-paste0(db, collapse="\', \'")}
+  datab
+}
+
+schem<-function(schema){
+  if(is.null(schema)){schema<-"public"} else {
+    schema<-paste0(schema, collapse="\', \'")}
+  schema
+}

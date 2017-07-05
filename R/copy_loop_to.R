@@ -1,9 +1,9 @@
 #'copy_loop_to transfers table from one database to another
 #'
-#'Transfers table from one database to the another without overloading R memory. Best used when databases don't have a connection to eachother. 
+#'Transfers table from one database to the another without overloading R memory. Best used when databases don't have a connection to eachother.
 #'@return Transfers table from intital database to another.
 #'@param conn1: Connection to initial database where the table is coming from.
-#'@param conn2: Connection to the database where the table is transferring to. If conn2 is NULL then conn2 will default to initial database. 
+#'@param conn2: Connection to the database where the table is transferring to. If conn2 is NULL then conn2 will default to initial database.
 #'@param name: Name of table on conn2 database
 #'@param n: Batch loader, amount of data to be transferred with each cycle.
 #'@param statement: SQL statement on initial database.

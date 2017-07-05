@@ -1,4 +1,4 @@
-#'db_send_uery sends SQL
+#'db_send_query sends SQL
 #'
 #'Sends sql queries to the database.
 #'@return Sends sql queries directly to the database.
@@ -13,9 +13,8 @@
 
 
 #---- db_send_query ----
-db_send_query<-function(con, statement, ...){
+db_send_query<-function(conn, statement, ...){
   assertthat::assert_that(
     assertthat::is.string(statement))
-  suppressWarnings(DBI::dbSendStatement(con$con,statement, ...))
+  suppressWarnings(DBI::dbSendStatement(con=conn$con,statement, ...))
 }
-
