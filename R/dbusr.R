@@ -8,7 +8,6 @@
 #'@param db: Database name i.e. default
 #'@param schema: Database schema i.e public
 #'
-#'@export
 #'@examples
 #'  #Search for default user (account signed into the computer)
 #'   tables in the database default.
@@ -24,8 +23,13 @@
 #'    at start of table name variable.
 #'    dbusr(post,sbstr=c("DJ_","DRJ"), db=c("postgres","postgres1"), schema="public")->dbtables
 
-
+#'@export
 dbusr<-function(conn, uid=NULL,sbstr=NULL, db=NULL, schema=NULL){
+  UseMethod("dbusr")
+}
+
+#'@export
+dbusr.src_connectR<-function(conn, uid=NULL,sbstr=NULL, db=NULL, schema=NULL){
   
   if (!is.null(sbstr) && any(lapply(sbstr,nchar)!=3)) {
     stop("sbstr need to be vector with each element 3 nchar or set to default", call. = FALSE)

@@ -5,7 +5,6 @@
 #'@param conn: Connection to database. Can used assigned output from function connectR for the connection.
 #'@param db: Database name i.e. default
 #'@param schema: Database schema i.e public
-#'@export
 #'@examples
 #'  #Search for default user (account signed into the computer)
 #'   tables in the database default.
@@ -16,8 +15,13 @@
 #'    dbtbls(post,db=c("postgres","postgres1"),schema="public")->dbtables
 
 
-
+#'@export
 dbtbls<-function(conn, db=NULL, schema=NULL){
+  UseMethod("dbtbls")
+}
+
+#'@export
+dbtbls.src_connectR<-function(conn, db=NULL, schema=NULL){
   
   if (conn$info$dbms.name=="Teradata"){
     
