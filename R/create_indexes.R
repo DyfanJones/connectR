@@ -7,16 +7,23 @@
 #'@param indexes: a vector of column names to become indexes for a table.
 #'@param unique: Specifies if the indexes are unique or not (TRUE or FALSE).
 #'
-#'@export
 #'@examples
 #'  #Creates a table with no data on the database, but allows primary
 #'  keys/indexes to be created:
 #'    create_indexes(post, "testdata", testdata, c("col1","col2"))
 
-
-
-#---- db_create_indexes ----
+#'@export
 create_indexes <-
+  function (con,
+            table,
+            indexes = NULL,
+            unique = FALSE,
+            ...) {
+    UseMethod("create_indexes")
+  }
+
+#'@export
+create_indexes.src_connectR <-
   function (con,
             table,
             indexes = NULL,
