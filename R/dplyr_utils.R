@@ -1,5 +1,6 @@
 #---- tbl -----
 tbl.src_connectR <- function(src, from, ...) {
+  check_dbplyr()
   tryCatch(
     {
       dbplyr::tbl_sql("connectR", src=src, from=from, ...)

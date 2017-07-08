@@ -18,7 +18,11 @@ db_create_primary<-function(conn, name=NULL, value=NULL, primary=NULL, query = F
                           is.data.frame(value),
                           is.character(primary))
   
+  
   vars <- names(value)
+  gsub("\\.","",vars)->vars
+  gsub(" ","_",trimws(vars))->vars
+  
   assertthat::assert_that(all(tolower(unlist(primary)) %in% tolower(vars)))
   
   dplyr::db_data_type(conn$con,value)->dbtype

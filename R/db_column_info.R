@@ -15,6 +15,7 @@
 db_column_info<-function(conn, statement){
   UseMethod("db_column_info")
 }
+
 #'@export
 db_column_info.src_connectR<-function(conn, statement){
   assertthat::assert_that(assertthat::is.string(statement))
