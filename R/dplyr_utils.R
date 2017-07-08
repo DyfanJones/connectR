@@ -8,7 +8,6 @@ tbl.src_connectR <- function(src, from, ...) {
 }
 
 #---- copy_to ----
-
 copy_to.src_connectR <-
   function(conn,
            df,
@@ -149,6 +148,15 @@ db_drop_table.src_connectR <-
 
 #---- db_drop_view ----
 db_drop_view <-
+  function(conn,
+           table,
+           force = FALSE,
+           purge = FALSE,
+           ...) {
+    UseMethod("db_drop_view")
+  }
+
+db_drop_view.src_connectR <-
   function(conn,
            table,
            force = FALSE,

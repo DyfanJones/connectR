@@ -11,7 +11,12 @@
 #'   the columns in a SQL query
 #'    db_column_info(zeus,"select * from cis.cmi_daily_demand")
 
+#'@export
 db_column_info<-function(conn, statement){
+  UseMethod("db_column_info")
+}
+#'@export
+db_column_info.src_connectR<-function(conn, statement){
   assertthat::assert_that(assertthat::is.string(statement))
   
   if (!requireNamespace("stringr", quietly = TRUE)) {
