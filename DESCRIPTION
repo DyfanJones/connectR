@@ -1,7 +1,7 @@
 Package: connectR
 Type: Package
 Title: Database backend for DBI, dplyr and dbplyr
-Version: 0.1.5
+Version: 0.1.5.1
 Author: Dyfan Jones
 Maintainer: The package maintainer <dyfan.jones@shopdirect.com>
 Description: Allows you to use dplyr code with databases using the DBI package.
