@@ -16,62 +16,77 @@
 
 
 #'@export
-dbtbls<-function(conn, db=NULL, schema=NULL){
+dbtbls <- function(conn, db = NULL, schema = NULL) {
   UseMethod("dbtbls")
 }
 
 #'@export
-dbtbls.src_connectR<-function(conn, db=NULL, schema=NULL){
-  
-  if (conn$info$dbms.name=="Teradata"){
+dbtbls.src_connectR <- function(conn, db = NULL, schema = NULL) {
+  if (conn$info$dbms.name == "Teradata") {
+    db <- dbase(conn, db)
     
-    db<-dbase(conn,db)
+    sel <- "SELECT DATABASENAME, TABLENAME, CREATORNAME, CREATEDATE"
+    fro <- " FROM CIS.TABLE_DETAIL"
+    wh <- paste0(" WHERE DATABASENAME IN (\'", db, "\')")
     
-    sel<- "SELECT DATABASENAME, TABLENAME, CREATORNAME, CREATEDATE"
-    fro<- " FROM CIS.TABLE_DETAIL"
-    wh<- paste0(" WHERE DATABASENAME IN (\'", db, "\')")
+    query <- paste0(sel, fro, wh)
     
-    query<-paste0(sel, fro, wh)
-    
-    collect(tbl(conn,sql(query)))->result
-    result<-arrange(result,TABLENAME,CREATORNAME)
+    collect(tbl(conn, sql(query))) -> result
+    result <- arrange(result, TABLENAME, CREATORNAME)
   }
   
-  if(conn$info$dbms.name=="PostgreSQL") {
+  if (conn$info$dbms.name == "PostgreSQL") {
+    schema <- schem(schema)
     
-    schema<-schem(schema)
+    sel <- "SELECT Schemaname, Tablename, tableowner"
+    fro <- " FROM pg_catalog.pg_tables"
+    wh <- paste0(" where schemaname IN (\'", schema, "\')")
     
-    sel<-"SELECT Schemaname, Tablename, tableowner"
-    fro<-" FROM pg_catalog.pg_tables"
-    wh<-paste0(" where schemaname IN (\'",schema,"\')")
+    query <- paste0(sel, fro, wh)
     
-    query<-paste0(sel,fro,wh)
-    
-    collect(tbl(conn,sql(query)))->result
-    result<-arrange(result, tableowner)
+    collect(tbl(conn, sql(query))) -> result
+    result <- arrange(result, tableowner)
   }
   return(result)
 }
 
-UID<-function(conn, uid){
-  if(conn$info$dbms.name=="Teradata"){
-    if(is.null(uid)){UID<-paste0(toupper(Sys.getenv('USERNAME')),"\'",", \'","SAS_",Sys.getenv('USERNAME'))
-    } else {UID<-paste0(uid,collapse="\', \'")}
+UID <- function(conn, uid) {
+  if (conn$info$dbms.name == "Teradata") {
+    if (is.null(uid)) {
+      UID <-
+        paste0(toupper(Sys.getenv('USERNAME')),
+               "\'",
+               ", \'",
+               "SAS_",
+               Sys.getenv('USERNAME'))
+    } else {
+      UID <- paste0(uid, collapse = "\', \'")
+    }
   } else {
-    if(is.null(uid)){UID<-paste0((Sys.getenv('USERNAME')))
-    } else {UID<-paste0(uid,collapse="\', \'")}}
+    if (is.null(uid)) {
+      UID <- paste0((Sys.getenv('USERNAME')))
+    } else {
+      UID <- paste0(uid, collapse = "\', \'")
+    }
+  }
   UID
 }
 
-dbase<-function(conn,db){
-  if(is.null(db)){datab<-conn$info$dbname} else {
-    datab<-paste0(db, collapse="\', \'")}
+dbase <- function(conn, db) {
+  if (is.null(db)) {
+    datab <- conn$info$dbname
+  } else {
+    datab <- paste0(db, collapse = "\', \'")
+  }
   datab
 }
 
-schem<-function(schema){
-  if(is.null(schema)){schema<-"public"} else {
-    schema<-paste0(schema, collapse="\', \'")}
+schem <- function(schema) {
+  if (is.null(schema)) {
+    schema <- "public"
+  } else {
+    schema <- paste0(schema, collapse = "\', \'")
+  }
   schema
 }
 

@@ -16,17 +16,22 @@
 
 
 #---- db_create_indexes ----
-create_indexes<- function (con, table, indexes= NULL, unique = FALSE,...){
-  assertthat::assert_that(assertthat::is.string(table),
-                          assertthat::is.flag(unique))
-  
-  if(unique==F){
-    cre<-"CREATE INDEX "
-  } else {
-    cre<-"CREATE UNIQUE INDEX "
+create_indexes <-
+  function (con,
+            table,
+            indexes = NULL,
+            unique = FALSE,
+            ...) {
+    assertthat::assert_that(assertthat::is.string(table),
+                            assertthat::is.flag(unique))
+    
+    if (unique == F) {
+      cre <- "CREATE INDEX "
+    } else {
+      cre <- "CREATE UNIQUE INDEX "
+    }
+    
+    cols <- paste0(indexes, collapse = ", ")
+    dplyr::sql(paste0(cre, "(", cols , ")" , " ON ", table, ";")) -> sql
+    suppressWarnings(DBI::dbExecute(con, sql, ...))
   }
-  
-  cols<-paste0(indexes, collapse = ", ")
-  dplyr::sql(paste0(cre, "(", cols ,")" ," ON ", table,";"))->sql
-  suppressWarnings(DBI::dbExecute(con, sql,...))
-}

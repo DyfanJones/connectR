@@ -15,32 +15,47 @@
 
 
 
-copy_loop_to<-function(conn1,conn2=NULL, name, n=NULL, statement){
+copy_loop_to <- function(conn1,
+                         conn2 = NULL,
+                         name,
+                         n = NULL,
+                         statement) {
   assertthat::assert_that(assertthat::is.string(name),
                           assertthat::is.string(statement))
-  if(is.null(n)){
+  if (is.null(n)) {
     stop("Batch load is unknown, please give n a value.", call. = FALSE)
   }
   
-  res<-DBI::dbSendQuery(conn1$con, statement)
+  res <- DBI::dbSendQuery(conn1$con, statement)
   
-  if(is.null(conn2)){
-    conn=conn1
-  } else {conn=conn2}
-  
-  while(!DBI::dbHasCompleted(res)){
-    chunk<-DBI::dbFetch(res,n=n)
-    
-    if(conn$info$dbms.name=="PostgreSQL"){names(chunk)<-tolower(names(chunk))}
-    
-    suppressWarnings(DBI::dbWriteTable(conn=conn$con,
-                                       name=name,
-                                       value=chunk,
-                                       overwrite=FALSE,
-                                       temporary=FALSE,
-                                       append=TRUE))
+  if (is.null(conn2)) {
+    conn = conn1
+  } else {
+    conn = conn2
   }
   
-  print(paste0("Looping complete data frame transferred to ",conn$info$dbms.name))
+  while (!DBI::dbHasCompleted(res)) {
+    chunk <- DBI::dbFetch(res, n = n)
+    
+    if (conn$info$dbms.name == "PostgreSQL") {
+      names(chunk) <- tolower(names(chunk))
+    }
+    
+    suppressWarnings(
+      DBI::dbWriteTable(
+        conn = conn$con,
+        name = name,
+        value = chunk,
+        overwrite = FALSE,
+        temporary = FALSE,
+        append = TRUE
+      )
+    )
+  }
+  
+  print(paste0(
+    "Looping complete data frame transferred to ",
+    conn$info$dbms.name
+  ))
   
 }
