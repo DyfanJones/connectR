@@ -155,12 +155,13 @@ copy_to.src_connectR <-
   }
 
 #---- copied from dplyr ----
-"%||%" <- function(x, y)
-  if (is.null(x))
+"%||%" <- function(x, y) {
+  if (is.null(x)) {
     y
-else
-  x
-
+  } else{
+    x
+  }
+}
 
 sql_mutating_join <- function(type,
                               x,
