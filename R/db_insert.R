@@ -13,16 +13,22 @@
 
 #---- db_insert_into ----
 db_insert<-
-  function(con, name, values, ...) {
-    assertthat::assert_that(assertthat::is.string(table),
-                            is.data.frame(values))
+  function(conn, name, values, query=FALSE, ...) {
+    assertthat::assert_that(assertthat::is.string(name), is.data.frame(values))
     
-    cols <- lapply(values,dbplyr::escape,collapse=NULL,parens = FALSE)
-    cols[[1]]<-paste0("INSERT INTO ", name, " VALUES (",cols[[1]])
-    col_mat <-  matrix(unlist(cols, use.names = FALSE), nrow = nrow(test1))
+    cols <- lapply(values, dbplyr::escape, collapse = NULL,
+                   parens = FALSE)
+    cols[[1]] <- paste0("INSERT INTO ", name, " VALUES (", cols[[1]])
+    col_mat <- matrix(unlist(cols, use.names = FALSE), nrow = nrow(values))
     rows <- apply(col_mat, 1, paste0, collapse = ", ")
     Values <- paste0(rows, ");", collapse = "\n ")
-    sql(Values)->sql
+    SQL <- sql(Values)
+    suppressWarnings(DBI::dbExecute(conn$con, SQL, ...))
+    if(query==TRUE){return(SQL)}
     
-    suppressWarnings(DBI::dbExecute(con, sql,...))
+    if(query==TRUE){return(SQL)}
+    
+    suppressWarnings(DBI::dbExecute(conn$con, SQL, ...))
   }
+
+

@@ -27,7 +27,7 @@
 
 dbusr<-function(conn, uid=NULL,sbstr=NULL, db=NULL, schema=NULL){
   
-  if (!is.null(sbstr) && any(purrr::map_dbl(sbstr,nchar)!=3)) {
+  if (!is.null(sbstr) && any(lapply(sbstr,nchar)!=3)) {
     stop("sbstr need to be vector with each element 3 nchar or set to default", call. = FALSE)
   }
   
@@ -69,4 +69,10 @@ dbusr<-function(conn, uid=NULL,sbstr=NULL, db=NULL, schema=NULL){
   }
   
   return(result)
+}
+
+sbstr<-function(x){
+  if(is.null(x)){sbstr<-""} else {x<-paste0(x, collapse="\', \'")
+  sbstr<-paste0(" OR SUBSTR(A.TABLENAME,1,3) IN (\'",x,"\')")}
+  sbstr
 }

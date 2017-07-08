@@ -59,12 +59,6 @@ UID<-function(conn, uid){
   UID
 }
 
-sbstr<-function(x){
-  if(is.null(x)){sbstr<-""} else {x<-paste0(x, collapse="\', \'")
-  sbstr<-paste0(" OR SUBSTR(A.TABLENAME,1,3) IN (\'",x,"\')")}
-  sbstr
-}
-
 dbase<-function(conn,db){
   if(is.null(db)){datab<-conn$info$dbname} else {
     datab<-paste0(db, collapse="\', \'")}
@@ -76,3 +70,8 @@ schem<-function(schema){
     schema<-paste0(schema, collapse="\', \'")}
   schema
 }
+
+#---- query database for tables ----
+#sel<-"SELECT DATABASENAME, TABLENAME, CREATORNAME, CAST(CREATETIMESTAMP AS DATE)"
+#fro<-" FROM DBC.COLUMNS"
+#wh<-paste0(" WHERE DATABASENAME IN (\'", db, "\')")
