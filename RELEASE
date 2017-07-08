@@ -1,15 +1,28 @@
-0.14
-- Built db_create_primary  function
-- Built copy_loop_to function
-- Gave  copy_to function to create primary indexes / keys
-- Updated vignettes
+0.1.5
+- compute function overloaded to work with teradata and postgress
+- db_save_query overloaded to save queries created using lazy evaluation
+- changed how src_connectR and removed default database leaving it for odbc api to set default.
+- new function db_drop_view to drop views in the database
+- Updated vignettes accordingly
+- Introduced validation to db_create_primary and copy_to
+
+0.1.4.1
+- db_create_primary new feature, return sql created before sending to database
+- src_connectr extra stop if sodium doesn't exist in environment
+- new function db_column_info
+
+0.1.4
+- gave copy_to append functionality
+- updated method of using copy_to can use con instead of conn$con for connection.
+- new function db_insert
+- new function db_create_primary
+- new function copy_loop_to
+- updated vignette
 
 0.1.3
-- Built starting guide to connectR vignette
+- Built starting guide vignette to connectR
 - Build connectR_Syntax vignette
-- Built Advanced guide to connectR vignette
 - Built new function to send sql queries to databases db_send_query
-
 
 0.1.2
 - Added dplyr_utils for connectR
