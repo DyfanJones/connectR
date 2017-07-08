@@ -4,7 +4,7 @@
 \alias{db_insert}
 \title{db_insert inserts data into a database table from a data.frame}
 \usage{
-db_insert(con, name, values, ...)
+db_insert(conn, name, values, query = FALSE, ...)
 }
 \arguments{
 \item{conn:}{Connection to database. Can used assigned output from function connectR for the connection.}
