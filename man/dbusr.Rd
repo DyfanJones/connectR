@@ -4,7 +4,8 @@
 \alias{dbusr}
 \title{dbusr search database for user created tables}
 \usage{
-dbusr(conn, uid = NULL, sbstr = NULL, db = NULL, schema = NULL)
+dbusr(conn, uid = NULL, sbstr = NULL, db = NULL, schema = NULL,
+  query = FALSE)
 }
 \arguments{
 \item{conn:}{Connection to database. Can used assigned output from function connectR for the connection.}
