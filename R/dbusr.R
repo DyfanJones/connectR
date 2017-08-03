@@ -24,13 +24,15 @@
 #'    dbusr(post,sbstr=c("DJ_","DRJ"), db=c("postgres","postgres1"), schema="public")->dbtables
 
 #'@export
-dbusr <- function(conn,
-                  uid = NULL,
-                  sbstr = NULL,
-                  db = NULL,
-                  schema = NULL) {
-  UseMethod("dbusr")
-}
+dbusr <-
+  function(conn,
+           uid = NULL,
+           sbstr = NULL,
+           db = NULL,
+           schema = NULL,
+           query = FALSE) {
+    UseMethod("dbusr")
+  }
 
 #'@export
 dbusr.src_connectR <-
@@ -38,11 +40,8 @@ dbusr.src_connectR <-
            uid = NULL,
            sbstr = NULL,
            db = NULL,
-           schema = NULL) {
-    if (!is.null(sbstr) && any(lapply(sbstr, nchar) != 3)) {
-      stop("sbstr need to be vector with each element 3 nchar or set to default",
-           call. = FALSE)
-    }
+           schema = NULL,
+           query = FALSE) {
     
     if (conn$info$dbms.name == "Teradata") {
       UID <- UID(conn, uid)
@@ -50,22 +49,24 @@ dbusr.src_connectR <-
       db <- dbase(conn, db)
       
       sel <-
-        "SELECT A.TABLENAME, SUM(A.CURRENTPERM) AS CURRENTPERM, (100 - (AVG(CurrentPerm)/MAX(CurrentPerm)*100)) AS SkewFactor  , B.CREATORNAME, B.CREATETIMESTAMP"
-      fro <- " FROM DBC.TABLESIZE A, DBC.TABLES B"
+        "SELECT \n A.DATABASENAME, \n A.TABLENAME, \n SUM(A.CURRENTPERM) AS CURRENTPERM,  \n (100 - (AVG(CurrentPerm)/MAX(CurrentPerm)*100)) AS SkewFactor, \n B.CREATORNAME, \n B.CREATETIMESTAMP"
+      fro <- "\n FROM DBC.TABLESIZE A, \n DBC.TABLES B"
       wh <-
         paste0(
-          " WHERE A.DATABASENAME IN (\'",
+          "\n WHERE A.DATABASENAME IN (\'",
           db,
-          "\') AND A.TABLENAME=B.TABLENAME AND (CREATORNAME IN (\'",
+          "\') \n AND A.TABLENAME=B.TABLENAME \n AND (CREATORNAME IN (\'",
           UID,
           "\')",
           sbstr,
-          ") GROUP BY 1,4,5"
+          ") \n GROUP BY 1,2,5,6"
         )
       
-      query <- paste0(sel, fro, wh)
+      sqlquery <- sql(paste0(sel, fro, wh))
       
-      collect(tbl(conn, sql(query))) -> result
+      if(query==TRUE){return(sqlquery)}
+      
+      collect(tbl(conn, sqlquery)) -> result
       result <- arrange(result, desc(SkewFactor))
       
     }
@@ -75,21 +76,22 @@ dbusr.src_connectR <-
       schema <- schem(schema)
       
       sel <-
-        "SELECT a.relname as Table, pg_size_pretty(pg_total_relation_size(relid)) As Size, pg_size_pretty(pg_total_relation_size(relid) - pg_relation_size(relid)) as External_Size, b.tableowner"
+        "SELECT \n a.relname as Table, \n pg_size_pretty(pg_total_relation_size(relid)) As Size, \n pg_size_pretty(pg_total_relation_size(relid) - pg_relation_size(relid)) as External_Size, \n b.tableowner"
       fro <-
-        " FROM pg_catalog.pg_statio_user_tables as a inner join pg_tables as b on a.relname = b.tablename"
+        "\n FROM pg_catalog.pg_statio_user_tables as a \n inner join pg_tables as b \n on a.relname = b.tablename"
       wh <-
-        paste0(" where b.tableowner IN (\'",
+        paste0("\n where b.tableowner IN (\'",
                UID,
                "\')",
-               " and a.schemaname IN (\'",
+               "\n and a.schemaname IN (\'",
                schema,
                "\')")
       
-      query <- paste0(sel, fro, wh)
+      sqlquery <- sql(paste0(sel, fro, wh))
       
-      tbl(conn, sql(query)) -> result
-      collect(tbl(conn, sql(query))) -> result
+      if(query==TRUE){return(sqlquery)}
+      
+      collect(tbl(conn, sqlquery)) -> result
       dplyr::mutate(
         result,
         type = substr(size, nchar(size) - 2, nchar(size)),
@@ -116,7 +118,7 @@ sbstr <- function(x) {
     sbstr <- ""
   } else {
     x <- paste0(x, collapse = "\', \'")
-    sbstr <- paste0(" OR SUBSTR(A.TABLENAME,1,3) IN (\'", x, "\')")
+    sbstr <- paste0(" OR \n SUBSTR(A.TABLENAME,1, (CASE WHEN POSITION('_'  IN  A.TABLENAME )=0 THEN 0 ELSE POSITION('_'  IN  A.TABLENAME )-1 END) ) IN (\'", x, "\')")
   }
   sbstr
 }
