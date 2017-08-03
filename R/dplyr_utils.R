@@ -62,6 +62,7 @@ copy_to.src_connectR <-
                         name = name,
                         value = df,
                         primary = primary)
+      
       if (conn$info$dbms.name == "PostgreSQL") {
         names(df) <- tolower(names(df))
       }
