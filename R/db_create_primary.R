@@ -22,7 +22,6 @@ db_create_primary <-
            query = FALSE) {
     UseMethod("db_create_primary")
   }
-
 #'@export
 db_create_primary.src_connectR <-
   function(conn,
@@ -35,23 +34,20 @@ db_create_primary.src_connectR <-
                             is.character(primary))
     
     vars <- names(value)
-    gsub("\\.", "", vars) -> vars
-    gsub(" ", "_", trimws(vars)) -> vars
-    
     assertthat::assert_that(all(tolower(unlist(primary)) %in% tolower(vars)))
     
-    dplyr::db_data_type(conn$con, value) -> dbtype
+    db_data_type(conn, value) -> dbtype
     
     data_frame(name = c(""),
                type = c("")) -> t
     
+    
+    db_rename_column(conn, value)->rename_column
+    
     for (i in 1:length(dbtype)) {
-      t[i, 1] <- names(value[i])
+      t[i, 1] <- rename_column[i]
       t[i, 2] <- dbtype[i]
     }
-    
-    gsub("\\.", "", t[[1]]) -> t[[1]]
-    gsub(" ", "_", trimws(t[[1]])) -> t[[1]]
     
     rows <- apply(t, 1, paste0, collapse = " ")
     values <- paste0(rows, collapse = ",\n ")

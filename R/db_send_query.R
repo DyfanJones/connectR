@@ -11,12 +11,14 @@
 #'    db_send_query(post$con, "create table hello as (select * from world) with no data;")
 
 #'@export
-db_send_query <- function(conn, statement, ...) {
+db_send_query <- 
+  function(conn, statement, ...) {
   UseMethod("db_send_query")
 }
 
 #'@export
-db_send_query.src_connectR <- function(conn, statement, ...) {
+db_send_query.src_connectR <- 
+  function(conn, statement, ...) {
   assertthat::assert_that(assertthat::is.string(statement))
   suppressWarnings(DBI::dbSendStatement(con = conn$con, statement, ...))
 }

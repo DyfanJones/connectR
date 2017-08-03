@@ -1,12 +1,13 @@
 #---- tbl -----
-tbl.src_connectR <- function(src, from, ...) {
-  check_dbplyr()
-  tryCatch({
-    dbplyr::tbl_sql("connectR", src = src, from = from, ...)
-  })
-}
+tbl.src_connectR <-
+  function(src, from, ...) {
+    tryCatch({
+      dbplyr::tbl_sql("connectR", src = src, from = from, ...)
+    })
+  }
 
 #---- copy_to ----
+
 copy_to.src_connectR <-
   function(conn,
            df,
@@ -46,25 +47,26 @@ copy_to.src_connectR <-
       stop("Overwrite and append can't both be TRUE.")
     }
     
+    if (conn$info$dbms.name == "PostgreSQL") {
+      names(df) <- tolower(names(df))
+    }
+    
+    #column name formatting
+    db_rename_column(conn, df) -> names(df)
+    
+    vars <- names(df)
+    
     # PRIMARY INDEX
     if (!is.null(primary)) {
       if (overwrite == TRUE) {
         db_drop_table(conn, name)
       }
-      
-      gsub("\\.", "", names(df)) -> names(df)
-      gsub(" ", "_", trimws(names(df))) -> names(df)
-      
-      vars <- names(df)
       assertthat::assert_that(all(tolower(unlist(primary)) %in% tolower(vars)))
       
       db_create_primary(conn,
                         name = name,
                         value = df,
                         primary = primary)
-      if (conn$info$dbms.name == "PostgreSQL") {
-        names(df) <- tolower(names(df))
-      }
       
       DBI::dbWriteTable(
         conn = conn$con,
@@ -106,13 +108,6 @@ copy_to.src_connectR <-
       
       # No Primary Index
     } else{
-      gsub("\\.", "", names(df)) -> names(df)
-      gsub(" ", "_", trimws(names(df))) -> names(df)
-      if (conn$info$dbms.name == "PostgreSQL") {
-        names(df) <- tolower(names(df))
-      }
-      
-      vars <- names(df)
       assertthat::assert_that(all(tolower(unlist(primary)) %in% tolower(vars)))
       
       DBI::dbWriteTable(
@@ -155,36 +150,38 @@ copy_to.src_connectR <-
   }
 
 #---- copied from dplyr ----
-"%||%" <- function(x, y) {
-  if (is.null(x)) {
-    y
-  } else{
-    x
+"%||%" <-
+  function(x, y) {
+    if (is.null(x)) {
+      y
+    } else {
+      x
+    }
   }
-}
 
-sql_mutating_join <- function(type,
-                              x,
-                              y,
-                              by = NULL,
-                              copy = FALSE,
-                              suffix = c(".x", ".y"),
-                              auto_index = FALSE,
-                              ...) {
-  by <- dplyr:::common_by(by, x, y)
-  y <-
-    dplyr:::auto_copy(x, y, copy, indexes = if (auto_index)
-      list(by$y))
-  sql <-
-    sql_join(x$src$con,
-             x,
-             y,
-             type = type,
-             by = by,
-             suffix = suffix)
-  update(tbl(x$src, sql), group_by = groups(x))
-}
 
+sql_mutating_join <-
+  function(type,
+           x,
+           y,
+           by = NULL,
+           copy = FALSE,
+           suffix = c(".x", ".y"),
+           auto_index = FALSE,
+           ...) {
+    by <- dplyr:::common_by(by, x, y)
+    y <-
+      dplyr:::auto_copy(x, y, copy, indexes = if (auto_index)
+        list(by$y))
+    sql <-
+      sql_join(x$src$con,
+               x,
+               y,
+               type = type,
+               by = by,
+               suffix = suffix)
+    update(tbl(x$src, sql), group_by = groups(x))
+  }
 
 #---- db_drop_table ----
 db_drop_table.src_connectR <-
@@ -236,14 +233,16 @@ db_drop_view.src_connectR <-
 
 #---- sql_escape_ident ----
 #
-sql_escape_ident.src_connectR <- function(con, x) {
-  dbplyr::sql_quote(x, "`")
-}
+sql_escape_ident.src_connectR <-
+  function(con, x) {
+    dbplyr::sql_quote(x, "`")
+  }
 
 #---- sql_escape_string ----
-sql_escape_string.src_connectR <- function(con, x) {
-  dbplyr::sql_quote(x, "'")
-}
+sql_escape_string.src_connectR <-
+  function(con, x) {
+    dbplyr::sql_quote(x, "'")
+  }
 
 #---- compute ----
 compute.tbl_connectR <-
@@ -299,7 +298,8 @@ compute.tbl_connectR <-
     
     if (trimws(tolower(type)) == "table" && overwrite == TRUE) {
       db_drop_table(x$src, name)
-    } else if (trimws(tolower(type)) == "view" && overwrite == TRUE) {
+    } else if (trimws(tolower(type)) == "view" &&
+               overwrite == TRUE) {
       db_drop_view(x$src, name)
     }
     
@@ -328,9 +328,7 @@ compute.tbl_connectR <-
       ...
     )
     if (query == TRUE)
-      (
-        return(name)
-      )
+      (return(name))
   }
 
 
@@ -365,7 +363,8 @@ db_save_query.src_connectR <-
     }
     
     prep <-
-      paste0("CREATE ", if (is.null(type) || tolower(type) == "table") {
+      paste0("CREATE ", if (is.null(type) ||
+                            tolower(type) == "table") {
         sql("TABLE ")
       } else if (tolower(type) == "view") {
         sql("VIEW ")
@@ -377,7 +376,7 @@ db_save_query.src_connectR <-
       " ",
       "AS (")
     
-    dat <- if (data == FALSE) {
+    dat <- if (data == TRUE) {
       ""
     } else {
       "NO"
@@ -412,40 +411,43 @@ db_save_query.src_connectR <-
     name
   }
 
-pri <- function(primary, data) {
-  x <- paste0(primary, collapse = "\', \'")
-  if (data == TRUE) {
-    pri <- paste0("WITH DATA \n PRIMARY INDEX (\'", x, "\');")
-  } else {
-    pri <- paste0("WITH NO DATA \n PRIMARY INDEX (\'", x, "\');")
+pri <-
+  function(primary, data) {
+    x <- paste0(primary, collapse = "\', \'")
+    if (data == TRUE) {
+      pri <- paste0("WITH DATA \n PRIMARY INDEX (\'", x, "\');")
+    } else {
+      pri <- paste0("WITH NO DATA \n PRIMARY INDEX (\'", x, "\');")
+    }
+    pri
   }
-  pri
-}
 
 #---- db_data_type ----
 
-db_data_type.src_connectR <- function(con, fields, ...) {
-  char_type <- function(x) {
-    n <- max(nchar(as.character(x), "bytes"), 0L, na.rm = TRUE)
-    if (n <= 65535) {
-      paste0("varchar(", n, ")")
-    } else {
-      "mediumtext"
+db_data_type.src_connectR <-
+  function(con, fields, ...) {
+    char_type <- function(x) {
+      n <- max(nchar(as.character(x), "bytes"), 0L, na.rm = TRUE)
+      if (n <= 65535) {
+        paste0("varchar(", n, ")")
+      } else {
+        "mediumtext"
+      }
     }
+    
+    data_type <-
+      function(x) {
+        switch(
+          class(x)[1],
+          logical =   "boolean",
+          integer =   "integer",
+          numeric =   "float",
+          factor =    char_type(x),
+          character = char_type(x),
+          Date =      "date",
+          POSIXct =   "datetime",
+          stop("Unknown class ", paste(class(x), collapse = "/"), call. = FALSE)
+        )
+      }
+    vapply(fields, data_type, character(1))
   }
-  
-  data_type <- function(x) {
-    switch(
-      class(x)[1],
-      logical =   "boolean",
-      integer =   "integer",
-      numeric =   "float",
-      factor =    char_type(x),
-      character = char_type(x),
-      Date =      "date",
-      POSIXct =   "datetime",
-      stop("Unknown class ", paste(class(x), collapse = "/"), call. = FALSE)
-    )
-  }
-  vapply(fields, data_type, character(1))
-}

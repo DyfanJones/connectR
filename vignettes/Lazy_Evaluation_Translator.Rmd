@@ -1,0 +1,97 @@
+---
+title: "Lazy Evaluation Translator"
+author: "Dyfan Jones"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Intro
+
+connectR has a built in translator that will translate R code into SQL so a database can understand R_Code.
+
+First lets connect to the database and check connectR's translator.
+
+```{r, fig.show='hold'}
+library(tidyverse, warn.conflicts = FALSE)
+library(connectR)
+
+src_connectR("PostgreSQL35W")->post
+```
+
+Lets check the default translator dplyr provides, and compared it to connectR's translator
+
+```{r, fig.show='hold'}
+# Default translator
+sql_translate_env()
+
+# connectR's translator
+sql_translate_env(post$con)
+```
+
+As we can see connectR has a large tanslator that tries to cover as much as possible.
+
+## Scalar functions
+
+#### Basic Operators
+ R_code | SQL Code 
+--------|----------
+       !|       NOT  
+      !=|        <>                            
+    %in%|        IN             
+   &, &&|       AND             
+ `|, ||`|        OR   
+       ^|     POWER                     
+      ==|         =   
+      
+#### Casting functions
+ R_code | SQL Code | Description
+--------|----------|------------------------------------------------
+ as.bigint | BIGINT| `as.bigint(x)`: x is variable to be cast
+ as.character | CHAR | `as.character(x,y)`: x is variable to be cast, y length of character. Returns `... x CHAR(y)`
+ as.Date | DATE | `as.Date(x)`: x is variable to be cast
+ as.decimal | DECIMAL | `as.decimal(x,pre,sca)`: x is variable to be cast, pre and sca are parameters to define Decimal dimensions. Returns `... x DECIMAL (pre,sca)`
+ as.double | NUMERIC | `as.double(x)`: x is variable to be cast            
+ as.float | FLOAT | `as.float(x)`: x is variable to be cast
+ as.int | INT | `as.int(x)`: x is variable to be cast   
+ as.integer | INT | `as.integer(x)`: x is variable to be cast   
+ as.logical | BOOLEAN | `as.logical(x)`: x is variable to be cast       
+ as.numeric | NUMERIC | `as.numeric(x)`: x is variable to be cast       
+ as.smallint | SMALLINT | `as.smallint(x)`: x is variable to be cast   
+ as.timestamp | TIMESTAMP | `as.timestamp(x)`: x is variable to be cast
+ as.tinyint | TINYINT | `as.tinyint(x)`: x is variable to be cast
+ as.varchar | VARCHAR | `as.varchar(x,y)`: x is variable to be cast, y length of varchar. Returns `... x VARCHAR(y)`          
+ 
+#### Functions (that differ)
+ R_code | SQL Code | Description
+--------|----------|------------------------------------------------
+ paste  | CONCAT   | `paste(x1,x2,...)`: Returns `CONCAT(x1,x2,...)`
+ paste0 | `||`     | `paste0(x1,x2,...)`: Concatenates variables, strings, numbers, etc... together by using piping. Returns `x1||x2||...` (Preferred method due to issue in Teradata.)
+ grepl  | LIKE     | `grepl(x,y)`: x pattern, y variable. Returns `... y LIKE x`
+ trimws | TRIM     | `trimws(x)`: x variable to be trimmed.
+ ifelse | CASE WHEN | `ifelse(x,...,...)`: Returns a case statement  `CASE WHEN x ... ELSE ... END`
+ if_else | CASE WHEN | `ifelse(x,...,...)`: Returns a case statement  `CASE WHEN x ... ELSE ... END`
+ if(){}else{} | CASE WHEN | `if(x){...}else{...}`: Returns a case statement with an else `CASE WHEN x ... ELSE ... END`
+ tolower | LOWER   | `tolower(x)`: Returns `LOWER(x)`
+ toupper | UPPER   | `toupper(x)`: Returns `UPPER(x)`
+ scan    | STRTOK  | `scan(x,"-",1)`: Aligns to SAS scan function, returns `STRTOK(x,1,"-")`
+
+#### Lubridate style functions
+ R_code | SQL Code | Description
+--------|----------|------------------------------------------------
+ yeardiff |          | `yeardiff(x,y=NULL)`: Calculates the year difference between to date/timestamp fields. x initial date/timestamp, y latest date/timestamp (if y is null then y = DATE)
+ monthdiff |          | `monthdiff(x,y=NULL)`: Calculates the month difference between to date/timestamp fields. x initial date/timestamp, y latest date/timestamp (if y is null then y = DATE)
+  datediff |          | `datediff(x,y=NULL)`: Calculates the date difference between to date/timestamp fields. x initial date/timestamp, y latest date/timestamp (if y is null then y = DATE)
+ d_wk   | TD_DAY_OF_WEEK | `d_wk(x)`: Returns day of the week as a numeric                       
+ d_mth   | TD_DAY_OF_MONTH | `d_mth(x)`: Returns day of the month as a numeric
+ wd_mth | TD_WEEKDAY_OF_MONTH | `wd_mth(x)`: Returns weekday of the year as numeric                    
+ w_mth | TD_WEEK_OF_MONTH | `w_mth(x)`: Returns week of the month as numeric
+ d_yr   | TD_DAY_OF_YEAR | `d_yr(x)`: Returns day of the year as a numeric
+ w_yr  | TD_WEEK_OF_YEAR | `w_yr(x)`: Returns week of the year as a numeric
+ m_yr       | TD_MONTH_OF_YEAR | `m_yr(x)`: Returns month of the year as a numeric
+ year   | TD_YEAR_OF_CALENDAR | `year(x)`: Returns year as numeric
+
+**NOTE: To check all functions that can be translated please check `sql_translate_env(zeus$con)`**

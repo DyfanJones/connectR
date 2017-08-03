@@ -16,39 +16,51 @@
 
 
 #'@export
-dbtbls <- function(conn, db = NULL, schema = NULL) {
-  UseMethod("dbtbls")
-}
+dbtbls <-
+  function(conn,
+           db = NULL,
+           schema = NULL,
+           query = FALSE) {
+    UseMethod("dbtbls")
+  }
 
 #'@export
-dbtbls.src_connectR <- function(conn, db = NULL, schema = NULL) {
-  if (conn$info$dbms.name == "Teradata") {
-    db <- dbase(conn, db)
+dbtbls.src_connectR <-
+  function(conn,
+           db = NULL,
+           schema = NULL,
+           query = FALSE) {
+    if (conn$info$dbms.name == "Teradata") {
+      db <- dbase(conn, db)
+      
+      sel <- "SELECT \n DATABASENAME, \n TABLENAME, \n CREATORNAME, \n CREATEDATE"
+      fro <- "\n FROM CIS.TABLE_DETAIL"
+      wh <- paste0("\n WHERE DATABASENAME IN (\'", db, "\')")
+      
+      sqlquery <- sql(paste0(sel, fro, wh))
+      
+      if(query==TRUE){return(sqlquery)}
+      
+      collect(tbl(conn, sqlquery)) -> result
+      result <- arrange(result, TABLENAME, CREATORNAME)
+    }
     
-    sel <- "SELECT DATABASENAME, TABLENAME, CREATORNAME, CREATEDATE"
-    fro <- " FROM CIS.TABLE_DETAIL"
-    wh <- paste0(" WHERE DATABASENAME IN (\'", db, "\')")
-    
-    query <- paste0(sel, fro, wh)
-    
-    collect(tbl(conn, sql(query))) -> result
-    result <- arrange(result, TABLENAME, CREATORNAME)
+    if (conn$info$dbms.name == "PostgreSQL") {
+      schema <- schem(schema)
+      
+      sel <- "SELECT Schemaname, Tablename, tableowner"
+      fro <- " FROM pg_catalog.pg_tables"
+      wh <- paste0(" where schemaname IN (\'", schema, "\')")
+      
+      sqlquery <- sql(paste0(sel, fro, wh))
+      
+      if(query==TRUE){return(sqlquery)}
+      
+      collect(tbl(conn, sqlquery)) -> result
+      result <- arrange(result, tableowner)
+    }
+    return(result)
   }
-  
-  if (conn$info$dbms.name == "PostgreSQL") {
-    schema <- schem(schema)
-    
-    sel <- "SELECT Schemaname, Tablename, tableowner"
-    fro <- " FROM pg_catalog.pg_tables"
-    wh <- paste0(" where schemaname IN (\'", schema, "\')")
-    
-    query <- paste0(sel, fro, wh)
-    
-    collect(tbl(conn, sql(query))) -> result
-    result <- arrange(result, tableowner)
-  }
-  return(result)
-}
 
 UID <- function(conn, uid) {
   if (conn$info$dbms.name == "Teradata") {
