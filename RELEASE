@@ -1,3 +1,24 @@
+0.1.6
+- Introduced sql_translate_env to translate R code to sql
+- Fixed bug in query option in db_column_info
+- Fixed teradata bug with concat function
+- Introduced lubridate style functions into the translator
+- New vignette to show lazy evaluation translator
+- scan function introduced in lazy evaluation translator
+- Updated to take into account mac users
+- new function db_rename_column
+- updated copy_to function to take into db_rename_column
+- new function save_query
+- documentation for save_query
+
+0.1.5.1
+- fixed bug in dplyr.utils
+- Updated vignettes
+- Introduced UseMethods into connectR functions.
+- Update Description file to align to cran best practise
+- Introduced query option to all functions
+- Updated vignettes to allow for other team members to work on the development of connectR
+
 0.1.5
 - compute function overloaded to work with teradata and postgress
 - db_save_query overloaded to save queries created using lazy evaluation
