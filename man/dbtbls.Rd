@@ -4,7 +4,7 @@
 \alias{dbtbls}
 \title{dbtbls Searches the databases and schema}
 \usage{
-dbtbls(conn, db = NULL, schema = NULL)
+dbtbls(conn, db = NULL, schema = NULL, query = FALSE)
 }
 \arguments{
 \item{conn:}{Connection to database. Can used assigned output from function connectR for the connection.}
