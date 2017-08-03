@@ -1,14 +1,34 @@
-Package: connectR
 Type: Package
+Package: connectR
+Version: 0.1.6
 Title: Database backend for DBI, dplyr and dbplyr
-Version: 0.1.5.1
-Author: Dyfan Jones
-Maintainer: The package maintainer <dyfan.jones@shopdirect.com>
 Description: Allows you to use dplyr code with databases using the DBI package.
-License: MIT
+Authors@R: person("Dyfan", "Jones", email="dyfanjones@hotmail.com", 
+                  role= c("aut", "cre"))
+URL: https://github.com/DyfanJones/connectR 
+BugReports: https://github.com/DyfanJones/connectR/issues
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.0.1
-Suggests: knitr,
-    rmarkdown
+Depends: R (>= 3.1.2)
+Imports: assertthat,
+         dplyr (>= 0.7),
+         dbplyr (>= 1.1.0),
+         odbc (>= 1.1.1),
+         DBI (>= 0.7),
+         rstudioapi,
+         sodium,
+         rlang, 
+         stringr
+Suggests: bit64,
+          ggplot2,
+          hms,
+          knitr,
+          Lahman (>= 3.0-1),
+          mgcv,
+          rmarkdown,
+          testthat,
+          withr
 VignetteBuilder: knitr
+LinkingTo: Rcpp (>= 0.12.0), BH (>= 1.58.0-1), bindrcpp, plogr
+LazyData: true
+License: MIT + file LICENSE
+RoxygenNote: 6.0.1
