@@ -4,7 +4,7 @@
 \alias{db_column_info}
 \title{db_column_info returns column information from a SQL query}
 \usage{
-db_column_info(conn, statement)
+db_column_info(conn, statement, query = FALSE)
 }
 \arguments{
 \item{conn:}{Connection to database. Can used assigned output from function connectR for the connection.}
