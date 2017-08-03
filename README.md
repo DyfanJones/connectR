@@ -2,7 +2,7 @@
 connectR <img src="man/figures/logo.png" align="right" width="150px"/>
 ======================================================================
 
-July 05, 2017
+August 03, 2017
 
 Overview
 --------
@@ -23,11 +23,11 @@ Connecting to Databases
 
 To make a connection to a database, call `src_connectR()`. `src_connectR()` has been design to be as user friendly as possible. `src_connectR()` has the following arguments:
 
-    - dsn: Data Source Name (refer to odbc names i.e. "tera")
+    - dsn: Data Source Name (refer to odbc names i.e. "teradata")
     - uid: User ID on the database (Optional)
     - pwd: User's password (Optional)
     - Update: Update encrypted password (defaulted to FALSE)
-    - db: Database, this will default user's default database on the database i.e. TMG
+    - db: Database, this will default user's default database on the database i.e. POST
 
 This means you can connect to a database by only providing the dsn. connectR's function `src_connectR()` will handle the rest.
 
