@@ -11,7 +11,7 @@
 #'@examples
 #'#Save lazy evaluation sql to a string
 #'    tbl(post,sql("SELECT * FROM
-#'                  CIS.CMI_CALENDAR")) %>%
+#'                  CALENDAR")) %>%
 #'    group_by(ACCOUNT_YEAR_WEEK,
 #'             SEASON) %>%
 #'    summarise(WEEK_ENDING=max(CAL_DATE)) %>%
@@ -22,7 +22,7 @@
 #'#Save lazy evaluation sql to default location `getwd()`
 #'#with default name `connectR_sql`
 #'    tbl(post,sql("SELECT * FROM
-#'                  CIS.CMI_CALENDAR")) %>%
+#'                  CALENDAR")) %>%
 #'    group_by(ACCOUNT_YEAR_WEEK,
 #'             SEASON) %>%
 #'    summarise(WEEK_ENDING=max(CAL_DATE)) %>%
@@ -31,7 +31,7 @@
 #'#Save lazy evaluation sql to default location `C:/R_CODE`
 #'#with default name `connectR_sql`
 #'    tbl(post,sql("SELECT * FROM
-#'                  CIS.CMI_CALENDAR")) %>%
+#'                  CALENDAR")) %>%
 #'    group_by(ACCOUNT_YEAR_WEEK,
 #'             SEASON) %>%
 #'    summarise(WEEK_ENDING=max(CAL_DATE)) %>%
@@ -40,7 +40,7 @@
 #'#Save lazy evaluation sql to default location `C:/R_CODE`
 #'#with name `Test_sql`
 #'    tbl(post,sql("SELECT * FROM
-#'                  CIS.CMI_CALENDAR")) %>%
+#'                  CALENDAR")) %>%
 #'    group_by(ACCOUNT_YEAR_WEEK,
 #'             SEASON) %>%
 #'    summarise(WEEK_ENDING=max(CAL_DATE)) %>%
@@ -49,7 +49,7 @@
 #'#Save lazy evaluation sql to default location `C:/R_CODE`
 #'#with name `Test_sql` and type ".txt" text file.
 #'    tbl(post,sql("SELECT * FROM
-#'                  CIS.CMI_CALENDAR")) %>%
+#'                  CALENDAR")) %>%
 #'    group_by(ACCOUNT_YEAR_WEEK,
 #'             SEASON) %>%
 #'    summarise(WEEK_ENDING=max(CAL_DATE)) %>%

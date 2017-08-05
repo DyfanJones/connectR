@@ -21,5 +21,5 @@ Sends sql queries to the database.
 }
 \examples{
  #Sending sql query to create table on database.
-   db_send_query(post$con, "create table hello as (select * from world) with no data;")
+   db_send_query(post, "create table hello as (select * from world) with no data;")
 }
