@@ -1,4 +1,3 @@
-#'db_column_info returns column information from a SQL query
 #'
 #'Creates a tibble with information about the columns from a SQL query
 #'@return A Tibble containing column information from a SQL query
@@ -9,7 +8,7 @@
 #'@examples
 #'  #Creates a tibble/ data.frame with information about
 #'   the columns in a SQL query
-#'    db_column_info(zeus,"select * from cis.cmi_daily_demand")
+#'    db_column_info(post,"select * from Testtable")
 
 #'@export
 db_column_info <-
