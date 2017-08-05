@@ -1,3 +1,13 @@
+0.1.7
+- new function top, lazy evaluation function to get top n rows
+- new function sample_sql, lazy evaluation function to get sample with n rows
+- new function top_df, returns top n rows data.frame from lazy evaluation object
+- new function sample_df, returns sample with n rows data.frame from lazy evaluation object
+- Updated vignette connectR syntax to include new functions
+- Updated vignette Lazy_evaluation translator to include new functions
+- Updated vignette starting guide connectR to include new functions
+- Updated vignette advanced guide connectR to include new functions
+
 0.1.6
 - Introduced sql_translate_env to translate R code to sql
 - Fixed bug in query option in db_column_info
