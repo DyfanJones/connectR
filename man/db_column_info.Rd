@@ -2,7 +2,7 @@
 % Please edit documentation in R/db_column_info.R
 \name{db_column_info}
 \alias{db_column_info}
-\title{db_column_info returns column information from a SQL query}
+\title{Creates a tibble with information about the columns from a SQL query}
 \usage{
 db_column_info(conn, statement, query = FALSE)
 }
@@ -20,5 +20,5 @@ Creates a tibble with information about the columns from a SQL query
 \examples{
  #Creates a tibble/ data.frame with information about
   the columns in a SQL query
-   db_column_info(zeus,"select * from cis.cmi_daily_demand")
+   db_column_info(post,"select * from Testtable")
 }
