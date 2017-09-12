@@ -12,11 +12,11 @@ connectR is a wrapper package built on `dplyr`, `dbplyr`, `DBI` and `odbc` packa
 Installation
 ------------
 
-You can install the current development version from BitBucket:
+You can install the current development version from github:
 
     devtools::install_github("DyfanJones/connectR")
 
-You must also install drivers to provide connectivity to the databases you are wanting to connect to. For Teradata, you need to double check that you have 64 bit odbc drivers, if not this will restrict what version of R you can use.
+You must also install drivers to provide connectivity to the databases you are wanting to connect to. To connect to databases, you need to double check that you have 64 bit odbc drivers, if not this will restrict what version of R you can use.
 
 Connecting to Databases
 -----------------------
